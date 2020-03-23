@@ -20,7 +20,7 @@ library(knitr)
 
 Research Question:
 
-Does frog mortality rate chane in current COVID-19 situation in Ontario????
+Does frog mortality rate chane in current COVID-19 situation in Ontario?????
 
 H0: nothing will change
 H1: Frog mortality rate decreases with decreases in traggic and road mortality

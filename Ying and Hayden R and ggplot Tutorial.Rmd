@@ -1,0 +1,70 @@
+---
+title: "Hayden and Ying R and ggplot"
+author: "Hayden Wainwright"
+date: "3/23/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+## Initial tutorial in R and ggplot
+
+### Hayden and Ying
+
+### Overview:
+
+Research Question:
+
+Does frog mortality rate chane in current COVID-19 situation in Ontario
+
+H0: no
+H1: Frog mortality rate decreases with decreases in traggic and road mortality
+H2: Frog mortality rate increase with increasing human predation for food under pandemic
+
+
+### Topics to be dicussed
+
+#### R Basics (5-10min tops) (Hayden):
+1. how to make a project
+2. markdown vs script
+3. github links
+4. handling error messages 
+        (dependancies missing, unexpect ",", googling answers)
+5. how to google 101
+6. other helpful links (Ying)
+7. packages
+
+#### Simulating work (30min) (Hayden):
+1. how to generate a "fake" data set
+2. how to export the data set
+3. power analysis
+
+#### dplyr (20 min) (Ying):
+1. Import Data
+2. how to get rid of NA in your data
+3. how to make a new collumn in your data
+4. how to change the orientation and layout of your data (Hayden)
+5. double checking data sets for spelling mistakes
+6. piping and filtering/sort data
+7. creating new data frames
+8. how to make a small program (for loop, if statements, make your own functions) (Hayden to help)
+
+#### ggplot (20min) (Ying and Hayden):
+1. qplot 
+2. plotting basic functions in ggplot using geoms
+3. adding trend lines 
+4. adding multiple data sets to same graph
+5. anotate text and axises
+6. changin colour schemes and shapes
+7. change theme of a plot 
+8. plotting models 
+9. confidence intervals and standard error bars
+10. how to add multiple plots to one graph space
+
+
+

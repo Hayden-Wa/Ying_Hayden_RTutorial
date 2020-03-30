@@ -23,7 +23,7 @@ Research Question:
 Does frog mortality rate chane in current COVID-19 situation in Ontario???
 
 H0: nothing will change
-H1: Frog mortality rate decreases with decreases in traggic and road mortality
+H1: Frog mortality rate decreases with decreases in traffic and road mortality
 H2: Frog mortality rate increase with increasing human predation for food under pandemic
 
 
@@ -41,18 +41,20 @@ H2: Frog mortality rate increase with increasing human predation for food under 
 
 #### Simulating work (30min) (Hayden):
 1. how to generate a "fake" data set
+  (date, frogs dead on road, estimated pop size, location, Avg or total cars on road per unit time)
 2. how to export the data set
-3. power analysis
+3. power analysis????? (can go if need be)
 
 #### dplyr (20 min) (Ying):
 1. Import Data
-2. how to get rid of NA in your data
-3. how to make a new collumn in your data
-4. how to change the orientation and layout of your data (Hayden)
-5. double checking data sets for spelling mistakes
-6. piping and filtering/sort data
-7. creating new data frames
-8. how to make a small program (for loop, if statements, make your own functions) (Hayden to help)
+2. How to change data into what you want
+3. how to get rid of NA in your data
+4. how to make a new collumn in your data
+5. how to change the orientation and layout of your data (Hayden)
+6. double checking data sets for spelling mistakes
+7. piping and filtering/sort data
+8. creating new data frames
+9. how to make a small program (for loop, if statements, make your own functions) (Hayden to help)
 
 #### ggplot (20min) (Ying and Hayden):
 1. qplot 

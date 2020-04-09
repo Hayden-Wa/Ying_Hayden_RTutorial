@@ -76,7 +76,7 @@ It mostly depends on:
     + Pr (observed | H0 is ture) < alpha, reject null 
     + Pr (observed | H0 is ture) > alpha, fail to reject null 
 
-* **Effect size** - quantified magnitude of a result present in the population. Larger effects, larger power. 
+* **Effect size** - magnitude of the difference between groups. Larger effects, larger power. 
 
 * **Sample size** - Larger sample size, smaller sampling error, greater statistical power. 
     + *Paper recommended:  Sullivan and Feinn. 2002. Using Effect Size—or Why the P Value Is Not Enough*

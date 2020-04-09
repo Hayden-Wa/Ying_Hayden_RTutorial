@@ -20,10 +20,10 @@ library(knitr)
 
 Research Question:
 
-Does frog mortality rate chane in current COVID-19 situation in Ontario?
+Does frog mortality rate change in current COVID-19 situation in Ontario?
 
 H0: nothing will change
-H1: Frog mortality rate decreases with decreases in traffic and road mortality
+H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown 
 H2: Frog mortality rate increase with increasing human predation for food under pandemic
 
 
@@ -41,9 +41,55 @@ H2: Frog mortality rate increase with increasing human predation for food under 
 
 #### Simulating work (30min) (Hayden):
 1. how to generate a "fake" data set
-  (date, frogs dead on road, estimated pop size, location, Avg or total cars on road per unit time)
+  (date, frog species, frogs dead on road, estimated pop size, location, sampling year, Avg or total cars on road per unit time, food supply in Ontario as a proxy for human needs for food)
 2. how to export the data set
 3. power analysis????? (can go if need be)
+
+
+
+
+#### What is power analysis? (Ying)
+
+```{r, echo=FALSE}
+# How to make a nice table? Please check: https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html 
+
+library(knitr)
+library(kableExtra)
+
+PAcol1 <- c("", "Null hypothesis H0 is true", "Alternative hypothesis H1 is ture")
+PAcol2 <- c("Fail to reject H0", "Good", "Type II error")
+PAcol3 <- c("Reject H0", "Type I error", "Power")
+PAtable <- data.frame(PAcol1, PAcol2, PAcol3)
+colnames(PAtable) <- NULL
+
+kable(PAtable) %>%
+  kable_styling(c("striped", "hover"), full_width = FALSE, position = "float_right")
+```
+
+**Statistical power** is the probability that the test correctly rejects the null hypothesis.
+
+**Power** = Pr (Reject H0 | H1 is true) = 1 - Type II error rate
+
+It mostly depends on:
+
+* **Alpha level** - significance level = Type I error rate. Larger alpha, greater power.
+    + Pr (observed | H0 is ture) < alpha, reject null 
+    + Pr (observed | H0 is ture) > alpha, fail to reject null 
+
+* **Effect size** - quantified magnitude of a result present in the population. Larger effects, larger power. 
+
+* **Sample size** - Larger sample size, smaller sampling error, greater statistical power. 
+    + *Paper recommended:  Sullivan and Feinn. 2002. Using Effect Size—or Why the P Value Is Not Enough*
+
+**A power analysis** can be used to estimate the minimum sample size required for an experiment, given a desired significance level, effect size, and statistical power.
+
+
+##### How to do power analysis? (Ying)
+
+
+
+
+
 
 #### dplyr (20 min) (Ying):
 1. Import Data
@@ -56,17 +102,25 @@ H2: Frog mortality rate increase with increasing human predation for food under 
 8. creating new data frames
 9. how to make a small program (for loop, if statements, make your own functions) (Hayden to help)
 
+
+
 #### ggplot (20min) (Ying and Hayden):
 1. qplot 
 2. plotting basic functions in ggplot using geoms
+    + boxplot plot: mortality vs year 
 3. adding trend lines 
+    + scatter plot + linear model: mortality vs traffic 
 4. adding multiple data sets to same graph
 5. anotate text and axises
 6. changin colour schemes and shapes
+    + fill color of different frog species, different locations
 7. change theme of a plot 
 8. plotting models 
 9. confidence intervals and standard error bars
+    + linear model: mortality vs traffic, mortality vs food supply in ontario 
 10. how to add multiple plots to one graph space
+
+
 
 
 

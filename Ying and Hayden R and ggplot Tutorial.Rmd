@@ -76,9 +76,10 @@ It mostly depends on:
     + Pr (observed | H0 is ture) < alpha, reject null 
     + Pr (observed | H0 is ture) > alpha, fail to reject null 
 
-* **Effect size** - magnitude of the difference between groups. Larger effects, larger power. 
+* **Effect size** - magnitude of the difference between groups. The absolute effect size is the difference between the average, or mean, values in two different groups. Standardized effect size can be used to compared among studies. Larger effects, larger power. 
 
 * **Sample size** - Larger sample size, smaller sampling error, greater statistical power. 
+    + Small 0.2, Medium 0.5, Large 0.8, Very large 1.3
     + *Paper recommended:  Sullivan and Feinn. 2002. Using Effect Size—or Why the P Value Is Not Enough*
 
 **A power analysis** can be used to estimate the minimum sample size required for an experiment, given a desired significance level, effect size, and statistical power.

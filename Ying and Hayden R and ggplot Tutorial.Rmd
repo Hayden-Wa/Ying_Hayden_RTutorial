@@ -76,7 +76,7 @@ It mostly depends on:
     + Pr (observed | H0 is ture) < alpha, reject null 
     + Pr (observed | H0 is ture) > alpha, fail to reject null 
 
-* **Effect size** - magnitude of the difference between groups. The absolute effect size is the difference between the average, or mean, values in two different groups. Standardized effect size can be used to compared among studies. Larger effects, larger power. 
+* **Effect size** - magnitude of the difference between groups. The absolute effect size is the difference between the average, or mean, values in two different groups. Effect size can be estimated by pilot study results, similar work published by others, or the minimum difference that would be considered important by educators/experts. If you devide it with standard deviation, you will get standardized effect size. Larger effects, larger power. 
 
 * **Sample size** - Larger sample size, smaller sampling error, greater statistical power. 
     + Small 0.2, Medium 0.5, Large 0.8, Very large 1.3

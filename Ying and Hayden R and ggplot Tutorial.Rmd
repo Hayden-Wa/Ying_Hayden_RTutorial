@@ -24,7 +24,7 @@ Does frog mortality rate change in current COVID-19 situation in Ontario?
 
 H0: nothing will change
 H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown 
-H2: Frog mortality rate increase with increasing human predation for food under pandemic
+
 
 
 ### Topics to be dicussed

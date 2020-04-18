@@ -3,8 +3,8 @@ title: "Hayden and Ying R and ggplot"
 author: "Hayden Wainwright"
 date: "3/23/2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}

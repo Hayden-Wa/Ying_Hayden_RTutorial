@@ -3,8 +3,8 @@ title: "Hayden and Ying R and ggplot"
 author: "Hayden Wainwright"
 date: "3/23/2020"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -41,8 +41,14 @@ H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown
 
 #### Simulating work (30min) (Hayden):
 1. how to generate a "fake" data set
-  (date, frog species, frogs dead on road, estimated pop size, location, sampling year, Avg or total cars on road per unit time, food supply in Ontario as a proxy for human needs for food)
+
+  -(Frog mortality, frog species (3), location (3), sampling year (2010-2020), Total number of cars)
+  -generate date for each year separately, then can change number of cars for this year specifically, 
+  -combine the data from different years into one data frame
+  -start with 1 species and 1 location, add more in if you can later
+  
 2. how to export the data set
+
 3. power analysis????? (can go if need be)
 
 

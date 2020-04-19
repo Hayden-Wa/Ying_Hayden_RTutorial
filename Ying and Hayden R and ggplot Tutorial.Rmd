@@ -37,6 +37,8 @@ H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown
         (dependancies missing, unexpect ",", googling answers)
 5. how to google 101
 6. other helpful links (Ying)
+    + Quick-R: https://www.statmethods.net/index.html 
+    + ggplot2: https://learnr.wordpress.com 
 7. packages
 
 #### Simulating work (30min) (Hayden):

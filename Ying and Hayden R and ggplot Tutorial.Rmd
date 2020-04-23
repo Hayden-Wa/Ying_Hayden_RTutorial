@@ -55,7 +55,8 @@ Year <- seq(2010, 2020, by=1)
 Cars_Op <- rnorm(n=33, mean = 50, sd = 1)
 Cars_H15 <- rnorm(n=33, mean = 60, sd = 1)
 Cars_Falls <- rnorm(n=33, mean = 40, sd =1)
-For (i in Year) {
+for (i in Year) {
+  sample(Location, 3, replace = FALSE, prob = NULL)   
   
 }
 

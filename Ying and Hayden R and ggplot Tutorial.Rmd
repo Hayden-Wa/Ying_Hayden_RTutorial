@@ -40,6 +40,7 @@ H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown
     + Quick-R: https://www.statmethods.net/index.html 
     + ggplot2: https://learnr.wordpress.com 
 7. packages
+    + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra
 
 #### Simulating work (30min) (Hayden):
 1. how to generate a "fake" data set
@@ -58,7 +59,7 @@ H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown
 
 #### What is power analysis? (Ying)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,warning=FALSE}
 # How to make a nice table? Please check: https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html 
 
 library(knitr)
@@ -71,7 +72,7 @@ PAtable <- data.frame(PAcol1, PAcol2, PAcol3)
 colnames(PAtable) <- NULL
 
 kable(PAtable) %>%
-  kable_styling(c("striped", "hover"), full_width = FALSE, position = "float_right")
+  kable_styling(c("striped", "hover"), full_width = FALSE, position = "left")
 ```
 
 **Statistical power** is the probability that the test correctly rejects the null hypothesis.
@@ -87,12 +88,45 @@ It mostly depends on:
 * **Effect size** - magnitude of the difference between groups. Larger effects, larger power. 
 
 * **Sample size** - Larger sample size, smaller sampling error, greater statistical power. 
-    + *Paper recommended:  Sullivan and Feinn. 2002. Using Effect Size—or Why the P Value Is Not Enough*
 
 **A power analysis** can be used to estimate the minimum sample size required for an experiment, given a desired significance level, effect size, and statistical power.
 
 
-##### How to do power analysis? (Ying)
+#### How to do power analysis? (Ying)
+```{r}
+library(pwr)
+# t-test
+pwr.t.test(d = 0.2, sig.level = 0.05, power = 0.8, type = c("one.sample"))
+# n is the sample size, d is the effect size, sig.level is alpha
+# Cohen suggests that d values of 0.2, 0.5, and 0.8 represent small, medium, and large effect sizes respectively.
+# type indicates a two-sample t-test, one-sample t-test or paired t-test.
+
+# ANOVA
+pwr.anova.test(k=5,f=.25,sig.level=.05,power=.8)
+# 
+
+# correlation
+pwr.r.test(r = 0.2, sig.level = 0.05, power = 0.8)
+# n is the sample size and r is the correlation
+
+
+
+```
+
+
+
+
+#### Estimation Stats? (Ying)
+There have been a lot of discussions in terms of not using p-value. 
+
+Check this website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background. 
+
+Some example papers: 
+
+  * Sullivan and Feinn. 2002. Using Effect Size—or Why the P Value Is Not Enough.
+
+
+- Test width of confidence interval for effect size 
 
 
 

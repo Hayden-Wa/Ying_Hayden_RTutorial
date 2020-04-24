@@ -50,6 +50,23 @@ H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown
   -combine the data from different years into one data frame
   -start with 1 species and 1 location, add more in if you can later
   
+```{r}
+Frog_Mort <- rnorm(n=99, mean = 0.25, sd=1)
+Species <- c("Anaxyrus fowleri", "Pseudacris crucifer", "Rana pipiens")
+Location <- c("Opinicon Road", "Hyw15", "Jones Falls")
+Year <- seq(2010, 2020, by=1)
+Cars_Op <- rnorm(n=33, mean = 50, sd = 1)
+Cars_H15 <- rnorm(n=33, mean = 60, sd = 1)
+Cars_Falls <- rnorm(n=33, mean = 40, sd =1)
+for (i in Year) {
+  sample(Location, 3, replace = FALSE, prob = NULL)   
+  
+}
+
+
+```
+
+  
 2. how to export the data set
 
 3. power analysis????? (can go if need be)

@@ -1,35 +1,61 @@
 ---
-title: "Hayden and Ying R and ggplot"
-author: "Hayden Wainwright"
-date: "3/23/2020"
-output:
-  pdf_document: default
-  html_document: default
+title: "Hayden and Ying's R tutorial"
+author: "Hayden Wainwright and Ying Chen, Lougheed Lab, Queen's University"
+date: "04/30/2020"
+output: html_document
 ---
+
+<style type="text/css">
+h1.title {
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+h4.author { /* Header 4 - and the author and data headers use this too  */
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
 ```
 
-## Initial tutorial in R and ggplot
+## Preface
 
-### Hayden and Ying
+In <font size="4" color="red">2020</font>, a pandemic of the virus called <font size="4" color="blue">COVID-19</font> hit human society harshly, with <font size="4" color="dark blue">millions of</font> people infected and <font size="4" color="dark blue">thousands of</font> people died. As simple country <font size="4" color="orange">biologists</font>, we stay at home at the behest of Government of Canada, blessing *Homo sapiens* for <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
 
-### Overview:
-
-Research Question:
-
-Does frog mortality rate change in current COVID-19 situation in Ontario?
-
-H0: nothing will change
-H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown 
+<font size="5">**Don't give up!**</font>   says a rock. We continue <font size="4" color="brown">academia</font> and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decide today is the day, to do <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
 
 
+- Section 1: R basics
+- Section 2: Data simulation 
+- Section 3: Power analysis 
+- Section 4: Data visulization 
 
-### Topics to be dicussed
+A real <font size="4" color="orange">biological question</font> to be solved: 
 
-#### R Basics (5-10min tops) (Hayden):
+- Does frog mortality rate change in current COVID-19 situation in Ontario?
+
+Two <font size="4" color="orange">hypotheses</font> raised: 
+
+- H0: It does not change.
+- H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown. 
+
+<font size="4" color="DarkPink">Ready? Go!</font>
+
+![<font size="4" color="gray">*You are my rock! ❤ Love from Lougheed Lab.❤ Photo by La Vita E Bella.❤*</font>](IMG_6184.JPG)
+
+
+
+
+
+
+#### Section 1: R Basics (5-10min tops) (Hayden):
 1. how to make a project
 2. markdown vs script
 3. github links
@@ -42,7 +68,8 @@ H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown
 7. packages
     + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra
 
-#### Simulating work (30min) (Hayden):
+
+#### Section 2: Data simulation (30min) (Hayden):
 1. how to generate a "fake" data set
 
   -(Frog mortality, frog species (3), location (3), sampling year (2010-2020), Total number of cars)
@@ -100,8 +127,8 @@ library(knitr)
 library(kableExtra)
 
 PAcol1 <- c("", "Null hypothesis H0 is true", "Alternative hypothesis H1 is ture")
-PAcol2 <- c("Fail to reject H0", "Good", "Type II error")
-PAcol3 <- c("Reject H0", "Type I error", "Power")
+PAcol2 <- c("Fail to reject H0", "Correct, what we want", "Type II error")
+PAcol3 <- c("Reject H0", "Type I error", "Correct, Power")
 PAtable <- data.frame(PAcol1, PAcol2, PAcol3)
 colnames(PAtable) <- NULL
 
@@ -163,8 +190,54 @@ Some example papers:
 - Test width of confidence interval for effect size 
 
 
+```{r}
+# Codes are from https://cran.r-project.org/web/packages/dabestr/vignettes/using-dabestr.html 
+library(dplyr)
+
+set.seed(54321)
+
+N = 10
+N = 40
+N = 100
+c1 <- rnorm(N, mean = 100, sd = 25)
+c2 <- rnorm(N, mean = 100, sd = 50)
+g1 <- rnorm(N, mean = 120, sd = 25)
+g2 <- rnorm(N, mean = 80, sd = 50)
+g3 <- rnorm(N, mean = 100, sd = 12)
+g4 <- rnorm(N, mean = 100, sd = 50)
+gender <- c(rep('Male', N/2), rep('Female', N/2))
+dummy <- rep("Dummy", N)
+id <- 1: N
+
+wide.data <- 
+  tibble::tibble(
+    Control1 = c1, Control2 = c2,
+    Group1 = g1, Group2 = g2, Group3 = g3, Group4 = g4,
+    Dummy = dummy,
+    Gender = gender, ID = id)
 
 
+my.data   <- 
+  wide.data %>%
+  tidyr::gather(key = Group, value = Measurement, -ID, -Gender, -Dummy)
+
+
+library(dabestr)
+
+two.group.unpaired <- 
+  my.data %>%
+  dabest(Group, Measurement, 
+         # The idx below passes "Control" as the control group, 
+         # and "Group1" as the test group. The mean difference
+         # will be computed as mean(Group1) - mean(Control1).
+         idx = c("Control1", "Group1"), 
+         paired = FALSE)
+
+two.group.unpaired 
+
+plot(two.group.unpaired, color.column = Gender)
+
+```
 
 
 #### dplyr (20 min) (Ying):

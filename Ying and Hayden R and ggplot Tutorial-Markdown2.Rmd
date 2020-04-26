@@ -46,14 +46,12 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 - H0: It does not change.
 - H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown. 
 
-<font size="4" color="DarkPink">Ready? Go!</font>
+<font size="4" color="blue">R</font>eady? Go!
 
 ![<font size="4" color="gray">*You are my rock! ❤ Love from Lougheed Lab.❤ Photo by La Vita E Bella.❤*</font>](IMG_6184.JPG)
 
 
-
-
-
+<p>&nbsp;</p>
 
 #### Section 1: R Basics (5-10min tops) (Hayden):
 1. how to make a project
@@ -68,6 +66,8 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 7. packages
     + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra
 
+
+<p>&nbsp;</p>
 
 #### Section 2: Data simulation (30min) (Hayden):
 1. how to generate a "fake" data set
@@ -143,44 +143,67 @@ Data <- cbind(NewYear, NewLocation, NewSpecies, Frog_Mort_Total)
 3. power analysis????? (can go if need be)
 
 
+<p>&nbsp;</p>
 
+#### Section 3. Power analysis (30-40min) (Ying)
+##### 3.1 What is power analysis? (5 min)
 
-#### What is power analysis? (Ying)
-
-```{r, echo=FALSE,warning=FALSE}
+```{r, include=FALSE,echo=FALSE,warning=FALSE}
 # How to make a nice table? Please check: https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html 
 
 library(knitr)
 library(kableExtra)
 
 PAcol1 <- c("", "Null hypothesis H0 is true", "Alternative hypothesis H1 is ture")
-PAcol2 <- c("Fail to reject H0", "Correct, what we want", "Type II error")
-PAcol3 <- c("Reject H0", "Type I error", "Correct, Power")
+PAcol2 <- c("Fail to reject H0", "Correct", "Type II error")
+PAcol3 <- c("Reject H0", "Type I error", "Correct. Power")
 PAtable <- data.frame(PAcol1, PAcol2, PAcol3)
 colnames(PAtable) <- NULL
 
-kable(PAtable) %>%
+kable(PAtable, caption="Table 1. Relationship between statistical power and hypotheses.") %>%
   kable_styling(c("striped", "hover"), full_width = FALSE, position = "left")
 ```
 
 **Statistical power** is the probability that the test correctly rejects the null hypothesis.
 
-**Power** = Pr (Reject H0 | H1 is true) = 1 - Type II error rate
+- **Power** = Pr (Reject H0 | H1 is true) = 1 - Type II error rate
 
 It mostly depends on:
 
-* **Alpha level** - significance level = Type I error rate. Larger alpha, greater power.
+- **Alpha level** = significance level = Type I error rate. Larger alpha, greater power.
     + Pr (observed | H0 is ture) < alpha, reject null 
     + Pr (observed | H0 is ture) > alpha, fail to reject null 
 
-* **Effect size** - magnitude of the difference between groups. Larger effects, larger power. 
+- **Effect size** - magnitude of the difference between groups. Larger effects, larger power. Notice that there are many definitions of the effect size. We will stick with the simplest one, which is the difference of two group means divided by the pooled standard deviation. 
 
-* **Sample size** - Larger sample size, smaller sampling error, greater statistical power. 
+- **Sample size** - Larger sample size, smaller sampling error, larger statistical power. 
 
-**A power analysis** can be used to estimate the minimum sample size required for an experiment, given a desired significance level, effect size, and statistical power.
+- **Your purpose** - For example, one might want to see if the regression coefficient is different from zero, while the other wants to get a very precise estimate of the regression coefficient with a very small confidence interval around it. This second purpose requires a larger sample size than does merely seeing if the regression coefficient is different from zero. 
+
+**A power analysis** 
+
+- Can be used to estimate the minimum sample size required for an experiment, given a desired significance level, effect size, and statistical power (more recommendations fall between 0.8 and 0.9). For example, how many locations (sample size) do we need to detect the frog mortality decrease of 10% (effect size) from 2019 to 2020 with a statistical power of 80% and a significance level of 0.05?
+
+- Can be used to determine power, given an effect size and sample size. For example, we have 20 locations (sample size) from each of 2019 and 2020. What is the statistical power to detect a 10% decrease (effect size) of frog mortality rate with a significance level of 0.05?
 
 
-#### How to do power analysis? (Ying)
+**Limitations of power analysis:** 
+
+- If you change the methodology used to collect the data or change the statistical procedure, you will mostly likely have to re-do power analysis. 
+- A standard power analysis gives you a “best case scenario” estimate of the necessary number of subjects needed to detect the effect. In most cases, this “best case scenario” is based on assumptions and educated guesses.  If any of these assumptions or guesses are incorrect, you may have less power than you need to detect the effect. 
+- You usually get a range of numbers you need, rather than a precise number. For example, if you do not know what the standard deviation of your outcome measure will be, you guess at this value, run the power analysis and get X number of subjects. 
+- The number of statistical tests that you intend to conduct will influence your necessary sample size:  the more tests that you want to run, the more subjects that you will need. 
+
+<p>&nbsp;</p>
+
+##### 3.2 How to do power analysis? (10 min)
+
+1. Specify your null hypothesis. 
+2. Decide your statistical analysis. 
+2. Decide your alpha, effect size, power. 
+3. 
+
+
 ```{r}
 library(pwr)
 # t-test
@@ -202,9 +225,9 @@ pwr.r.test(r = 0.2, sig.level = 0.05, power = 0.8)
 ```
 
 
+<p>&nbsp;</p>
 
-
-#### Estimation Stats? (Ying)
+##### 3.3 Alternative to power analysis - Estimation Stats (Ying)
 There have been a lot of discussions in terms of not using p-value. 
 
 Check this website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background. 
@@ -218,6 +241,7 @@ Some example papers:
 
 
 ```{r}
+# Estimation stats: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
 # Codes are from https://cran.r-project.org/web/packages/dabestr/vignettes/using-dabestr.html 
 library(dplyr)
 
@@ -266,6 +290,10 @@ plot(two.group.unpaired, color.column = Gender)
 
 ```
 
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 
 #### dplyr (20 min) (Ying):
 1. Import Data

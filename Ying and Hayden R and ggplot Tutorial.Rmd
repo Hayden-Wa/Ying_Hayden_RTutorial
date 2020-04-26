@@ -2,7 +2,9 @@
 title: "Hayden and Ying's R tutorial"
 author: "Hayden Wainwright and Ying Chen, Lougheed Lab, Queen's University"
 date: "04/30/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 <style type="text/css">

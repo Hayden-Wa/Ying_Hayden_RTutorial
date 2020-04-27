@@ -148,9 +148,7 @@ Data <- cbind(NewYear, NewLocation, NewSpecies, Frog_Mort_Total)
 ## Section 3. Power analysis (30-40min) (Ying)
 #### 3.1 What is power analysis? (5 min)
 
-<font size="2" color="red"> *The following materials are prepared by Ying upon her understanding, which means they can be flawed.* 
-
-*Ying highly recommends you to read authoritative papers for learning. Here are some:* </font> 
+<font size="2" color="red"> *The following materials are prepared by Ying upon her understanding, which means they can be flawed.Ying highly recommends you to read authoritative papers for learning. Here are some:* </font> 
 
 - <font size="2" color="gray">*Hoenig, J.M., and D. M. Heisey. 2001. The Abuse of Power: The Pervasive Fallacy of Power Calculations for Data Analysis. The American Statistician, 55(1): 19-24.*</font>
 - <font size="2" color="gray">*Levine, M., and Ensom M. H. H. 2001. Post Hoc Power Analysis: An Idea Whose Time Has Passed?  Pharmacotherapy, 21(4), 405-409.*</font>

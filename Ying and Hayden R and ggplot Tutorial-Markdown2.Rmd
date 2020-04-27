@@ -85,7 +85,7 @@ length(Frog_Mort[which(Frog_Mort>1)]) # If there are values over 1, need to dele
 Frog_Mort[which(Frog_Mort<0)] <- abs(Frog_Mort[which(Frog_Mort<0)])
 Frog_Mort <- sort(Frog_Mort) # smaller values at the beginning
 
-Cars <- rnorm(n=99, mean = 50, sd = 1) # sd is a bit too small? 
+Cars <- rnorm(n=99, mean = 50, sd = 8) # sd is a bit too small? 
 Cars <- sort(Cars)
 
 # Assign cars to frog mortality in a dataset 
@@ -110,38 +110,127 @@ Cars_Falls <- rnorm(n=33, mean = 40, sd =1)
 #######################################################################################################
 ####### Hayden's stuff
 
-Frog_MortInt <- rnorm(n=90, mean = 26, sd = 1)# assuming average frog mortality of 25% 
-
-COVIDFrog_Mort <- rnorm(n = 9, mean = 24, sd = 1)
-Frog_Mort_Total <- c((rnorm(n=90, mean = 26, sd = 1)), (rnorm(n = 9, mean = 24, sd = 1)))# assuming average frog mortality of 26% initially and then 24% after covid hit
-Frog_Mort_Total
+Frog_Mort <- c((rnorm(n=90, mean = 26, sd = 5)), (rnorm(n = 9, mean = 24, sd = 5)))# assuming average frog mortality of 26% initially and then 24% after covid hit
+Frog_Mort
 Species <- c("Anaxyrus fowleri", "Pseudacris crucifer", "Rana pipiens")
 Location <- c("Opinicon Road", "Opinicon Road", "Opinicon Road", "Hwy15", "Hwy15", "Hyw15", "Jones Falls", "Jones Falls", "Jones Falls")
 Year <- seq(2010, 2020, by=1)
-Cars_Op <- rnorm(n=33, mean = 50, sd = 1)
-Cars_H15 <- rnorm(n=33, mean = 60, sd = 1)
-Cars_Falls <- rnorm(n=33, mean = 40, sd =1)
-for (i in Year) {
-  sample(Location, 3, replace = FALSE, prob = NULL)   
-  
-}
+Cars_Op <- rnorm(n=33, mean = 50, sd = 8)
+Cars_H15 <- rnorm(n=33, mean = 60, sd = 8)
+Cars_Falls <- rnorm(n=33, mean = 40, sd =8)
 
-NewYear <- rep(Year, each = 9)
-NewSpecies <- rep(Species, 11)
-NewLocation <- rep(Location, 9)
+Year <- rep(Year, each = 9)
+Species <- rep(Species, 11)
+Location <- rep(Location, 9)
 
 #Now we can make our data frame!
 
-Data <- cbind(NewYear, NewLocation, NewSpecies, Frog_Mort_Total)
-
+Data1 <- cbind(Year, Location, Species, Frog_Mort)
+head(Data1)
 
 ```
 
+Alternatively we can also build our data set this way:
+  
+  
+```{r}
+library(dplyr)
+
+set.seed(54321)
+ 
+N_Int = 90
+N_COVID = 9
+N_OpRoad = 33
+N_Hyw15 = 33
+N_Falls = 33
+N = 5
+
+C1 <- rnorm(N, mean = 25, sd = 25)
+C2 <- rnorm(N, mean = 20, sd = 25)
+species <- c(rep('Anaxyrus fowleri', N/3), rep('Pseudacris crucifer', N/3), rep('Rana pipiens', N/3))
+dummy <- rep("dummy", N)
+id <- 1: N
+ 
+ tibble::tibble(
+    Before = c1, During = c2,
+    Dummy = dummy,
+    Species = species, ID = id)
+
+Data2 <- 
+  wide.data %>%
+  tidyr::gather(key = Group, value = Frog_Mortality, -ID, -Species, -Dummy)
+
+library(dabestr)
+
+tow.group.unpaired <- my.data %>%
+  dabest(Group, Measurement, 
+         # The idx below passes "Control" as the control group, 
+         # and "Group1" as the test group. The mean difference
+         # will be computed as mean(Group1) - mean(Control1).
+         idx = c("Pre-Pandemic", "Pandemic"), 
+         paired = FALSE)
+
+two.group.unpaired 
+
+plot(two.group.unpaired, color.column = Species)
+
+
+
+```
+  
+  From website example:
+  
+```{r}
+library(dplyr)
+
+set.seed(54321)
+#N = 10
+N = 40
+#N = 100
+c1 <- rnorm(N, mean = 100, sd = 25)
+c2 <- rnorm(N, mean = 100, sd = 50)
+g1 <- rnorm(N, mean = 120, sd = 25)
+g2 <- rnorm(N, mean = 80, sd = 50)
+g3 <- rnorm(N, mean = 100, sd = 12)
+g4 <- rnorm(N, mean = 100, sd = 50)
+gender <- c(rep('Male', N/2), rep('Female', N/2))
+dummy <- rep("Dummy", N)
+id <- 1: N
+
+wide.data <- 
+  tibble::tibble(
+    Control1 = c1, Control2 = c2,
+    Group1 = g1, Group2 = g2, Group3 = g3, Group4 = g4,
+    Dummy = dummy,
+    Gender = gender, ID = id)
+
+
+my.data   <- 
+  wide.data %>%
+  tidyr::gather(key = Group, value = Measurement, -ID, -Gender, -Dummy)
+
+
+library(dabestr)
+
+two.group.unpaired <- 
+  my.data %>%
+  dabest(Group, Measurement, 
+         # The idx below passes "Control" as the control group, 
+         # and "Group1" as the test group. The mean difference
+         # will be computed as mean(Group1) - mean(Control1).
+         idx = c("Control1", "Group1"), 
+         paired = FALSE)
+
+two.group.unpaired 
+
+plot(two.group.unpaired, color.column = Gender)
+```
+  
+  
   
 2. how to export the data set
 
-
-
+3. power analysis
 
 
 
@@ -428,6 +517,7 @@ plot(two.group.unpaired, color.column = Gender)
 <p>&nbsp;</p>
 
 #### dplyr (20 min) (Ying):
+
 1. Import Data
 2. How to change data into what you want
 3. how to get rid of NA in your data

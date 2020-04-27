@@ -126,6 +126,7 @@ Location <- rep(Location, 9)
 #Now we can make our data frame!
 
 Data1 <- cbind(Year, Location, Species, Frog_Mort)
+?cbind()
 head(Data1)
 
 ```
@@ -229,6 +230,14 @@ plot(two.group.unpaired, color.column = Gender)
   
   
 2. how to export the data set
+
+It may be useful, from time to time, to be able to save your data set that was created in R. To do this we simply can use the 'write.csv()' command as shown bellow for the first data set we created. 
+
+```{r}
+write.csv(Data1, 'FrogPandemic.csv')
+
+```
+
 
 3. power analysis
 

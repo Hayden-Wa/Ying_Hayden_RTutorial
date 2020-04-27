@@ -39,23 +39,21 @@ In <font size="4" color="red">2020</font>, a pandemic of the virus called <font 
 
 A real <font size="4" color="orange">biological question</font> to be solved: 
 
-- Does frog mortality rate change in current COVID-19 situation in Ontario?
+- Has frog mortality changed in current COVID-19 situation in Ontario compared to before?
 
 Two <font size="4" color="orange">hypotheses</font> raised: 
 
 - H0: It does not change.
 - H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown. 
 
-<font size="4" color="DarkPink">Ready? Go!</font>
+<font size="4" color="blue">R</font>eady? Go!
 
-![<font size="4" color="gray">*You are my rock! ❤ Love from Lougheed Lab.❤ Photo by La Vita E Bella.❤*</font>](IMG_6184.JPG)
-
-
+![<font size="4" color="gray">*You are my rock! Love from Lougheed Lab. Photo by La Vita E Bella.*</font>](IMG_6184.JPG)
 
 
+<p>&nbsp;</p>
 
-
-#### Section 1: R Basics (5-10min tops) (Hayden):
+## Section 1: R Basics (5-10min tops) (Hayden):
 1. how to make a project
 2. markdown vs script
 3. github links
@@ -69,7 +67,9 @@ Two <font size="4" color="orange">hypotheses</font> raised:
     + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra
 
 
-#### Section 2: Data simulation (30min) (Hayden):
+<p>&nbsp;</p>
+
+## Section 2: Data simulation (30min) (Hayden):
 1. how to generate a "fake" data set
 
   -(Frog mortality, frog species (3), location (3), sampling year (2010-2020), Total number of cars)
@@ -152,7 +152,7 @@ dummy <- rep("dummy", N)
 id <- 1: N
  
  tibble::tibble(
-    Before = c1, During = c2,
+    Before = C1, During = C2,
     Dummy = dummy,
     Species = species, ID = id)
 
@@ -233,7 +233,51 @@ plot(two.group.unpaired, color.column = Gender)
 3. power analysis
 
 
-#### What is power analysis? (Ying)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+## Section 3. Power analysis (30-40min) (Ying)
+#### 3.1 What is power analysis? (5 min)
+
+<font size="2" color="red"> *The following materials are prepared by Ying upon her understanding, which means they can be flawed.Ying highly recommends you to read authoritative papers for learning. Here are some:* </font> 
+
+- <font size="2" color="gray">*Hoenig, J.M., and D. M. Heisey. 2001. The Abuse of Power: The Pervasive Fallacy of Power Calculations for Data Analysis. The American Statistician, 55(1): 19-24.*</font>
+- <font size="2" color="gray">*Levine, M., and Ensom M. H. H. 2001. Post Hoc Power Analysis: An Idea Whose Time Has Passed?  Pharmacotherapy, 21(4), 405-409.*</font>
+
+
+
+<p>&nbsp;</p>
+**Statistical power** is the probability that the test correctly rejects the null hypothesis.
+
+- Power = Pr (Reject H0 | H1 is true) = 1 - Type II error rate
 
 ```{r, echo=FALSE,warning=FALSE}
 # How to make a nice table? Please check: https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html 
@@ -242,70 +286,183 @@ library(knitr)
 library(kableExtra)
 
 PAcol1 <- c("", "Null hypothesis H0 is true", "Alternative hypothesis H1 is ture")
-PAcol2 <- c("Fail to reject H0", "Correct, what we want", "Type II error")
-PAcol3 <- c("Reject H0", "Type I error", "Correct, Power")
+PAcol2 <- c("Fail to reject H0", "Correct", "Type II error")
+PAcol3 <- c("Reject H0", "Type I error", "Correct. Power")
 PAtable <- data.frame(PAcol1, PAcol2, PAcol3)
 colnames(PAtable) <- NULL
 
-kable(PAtable) %>%
+kable(PAtable, caption="Table 1. Hypotheis testing.") %>%
   kable_styling(c("striped", "hover"), full_width = FALSE, position = "left")
 ```
 
-**Statistical power** is the probability that the test correctly rejects the null hypothesis.
 
-**Power** = Pr (Reject H0 | H1 is true) = 1 - Type II error rate
+Power depends on:
 
-It mostly depends on:
-
-* **Alpha level** - significance level = Type I error rate. Larger alpha, greater power.
+- **Alpha level** = significance level = Type I error rate. Larger alpha, greater power.
     + Pr (observed | H0 is ture) < alpha, reject null 
     + Pr (observed | H0 is ture) > alpha, fail to reject null 
 
-* **Effect size** - magnitude of the difference between groups. Larger effects, larger power. 
+- **Effect size** - magnitude of the difference between groups. Larger effects, larger power. Notice that there are many definitions of the effect size. We will stick with the simplest one, which is the difference of two group means divided by the pooled standard deviation. 
 
-* **Sample size** - Larger sample size, smaller sampling error, greater statistical power. 
+- **Sample size** - Larger sample size, smaller sampling error, larger statistical power. 
 
-**A power analysis** can be used to estimate the minimum sample size required for an experiment, given a desired significance level, effect size, and statistical power.
+- **Your purpose** - For example, one might want to see if the regression coefficient is different from zero, while the other wants to get a very precise estimate of the regression coefficient with a very small confidence interval around it. This second purpose requires a larger sample size than does merely seeing if the regression coefficient is different from zero. 
+
+**A power analysis** = study plan
+
+- Can be used to estimate the "minimum" sample size required for an experiment, given a desired significance level, effect size, and statistical power (more recommendations fall between 0.8 and 0.9). For example, how many locations (sample size) do we need to detect the frog mortality decrease of 10% (effect size) from 2019 to 2020 with a statistical power of 80% and a significance level of 0.05? **But you don't want to just sample the "minimum" sample size, you want add a few more to give yourself some "wiggle-room" just in case.**
+
+- Note: Post-experiment power calculations should <font size="2" color="red"> **NOT**</font> be used to aid in the interpretation of the experimental results. Details see (Hoenig and Heisey 2001).
+
+**Limitations of power analysis:** 
+
+- If you change the methodology used to collect the data or change the statistical procedure, you will mostly likely have to re-do power analysis. 
+- A standard power analysis gives you a “best case scenario” estimate of the necessary number of subjects needed to detect the effect. In most cases, this “best case scenario” is based on assumptions and educated guesses.  If any of these assumptions or guesses are incorrect, you may have less power than you need to detect the effect. 
+- You usually get a range of numbers you need, rather than a precise number. For example, if you do not know what the standard deviation of your outcome measure will be, you guess at this value, run the power analysis and get X number of subjects. 
+- The number of statistical tests that you intend to conduct will influence your necessary sample size:  the more tests that you want to run, the more subjects that you will need. 
+
+<p>&nbsp;</p>
+
+#### 3.2 How to do power analysis? (10 min)
+
+1. Think through your research project and your purpose of the study (coefficient different from 0, precise point estimate, replication, etc.). Specify your null hypothesis. 
+
+2. List your statistical analysis. Try to know as much as possible about the statistical techniques, such as assumptions, types of data, whether there is alpha inflation issue, etc. 
+
+3. Decide on the effect size (or a range of effect sizes), significance level (alpha), sample sizes and/or power. How to guestimate the values? Do a literature review, a pilot study and using Cohen's recommendations. Here is Cohen's recommendations for the effect size: 
+    - Small effect:  1% of the variance; d = 0.2 (too small to detect other than statistically) 
+    - Medium effect:  6% of the variance; d = 0.5 (apparent with careful observation)
+    - Large effect: at least 15% of the variance; d = 0.8 (apparent with a superficial glance; unlikely to be the focus of research because it is too obvious)
+
+4. Coding. 
 
 
-#### How to do power analysis? (Ying)
+**Example 1**
+
+Recall our research question: Has frog mortality changed in current COVID-19 situation in Ontario compared to before?
+
+1. Null hypothesis: the mean frog mortality in Ontario in 2019 and 2020 is the same.
+
+2. Statistical test: paired t-test. 
+Null hypothesis: the true mean difference is zero. 
+Assumptions: 
+    - The dependent variable must be continuous (interval/ratio).
+    - The observations are independent of one another.
+    - The dependent variable should be approximately normally distributed.
+    - The dependent variable should not contain any outliers.
+
+3. I want to test how many individuals I need with: 
+    - small effect size, alpha at 0.05, power at 0.8
+    - small effect size, alpha at 0.01, power at 0.8
+    - medium effect size, alpha at 0.05, power at 0.9 
+
+4. Coding.
+
 ```{r}
 library(pwr)
-# t-test
-pwr.t.test(d = 0.2, sig.level = 0.05, power = 0.8, type = c("one.sample"))
-# n is the sample size, d is the effect size, sig.level is alpha
-# Cohen suggests that d values of 0.2, 0.5, and 0.8 represent small, medium, and large effect sizes respectively.
-# type indicates a two-sample t-test, one-sample t-test or paired t-test.
 
-# ANOVA
-pwr.anova.test(k=5,f=.25,sig.level=.05,power=.8)
-# 
-
-# correlation
-pwr.r.test(r = 0.2, sig.level = 0.05, power = 0.8)
-# n is the sample size and r is the correlation
+# 1. small effect size, alpha at 0.05, power at 0.8
+# n is the sample size, d is the effect size, sig.level is alpha, type indicates a two-sample t-test, one-sample t-test or paired t-test, alternative hypothesis is two.sided (default)
+pwr.t.test(d = 0.2, sig.level = 0.05, power = 0.8, type = c("paired"),alternative="two.sided")
 
 
+# Visualize how power change with sample size 
+# plot color names: https://www.maplesoft.com/support/help/Maple/view.aspx?path=plot/colornames 
+samplesizes <- seq(from=10,to=300,by=10)
+power.samplesizes <- pwr.t.test(n=samplesizes,sig.level=0.05,d=0.2,type=c("paired"),alternative="two.sided")$power
+plot(samplesizes,
+     power.samplesizes,
+     xlim=c(0,300),
+     xlab="Sample size",
+     ylab="Expected power",
+     ylim=c(0,1),
+     type="b",
+     col="darkorange",
+     lwd=5,axes=FALSE)
+axis(1,at=c(0,50,100,150,200,250,300))
+axis(2,at=c(0,0.25,0.5,0.75,1),labels=paste(c(0,25,50,75,100),"%"))
+text(x=50,y=0.9,labels="sig.level=0.05",col="darkblue")
+text(x=50,y=0.8,labels="effect.size=0.2",col="darkblue")
 
+# Visualize how sample size change with effect size 
+effectsizes <- seq(from=0.1,to=0.9,by=0.1)
+samplesize.effectsizes.08 <-sapply(effectsizes, function(d){pwr.t.test(sig.level=0.05,d=d,power=0.8,type=c("paired"),alternative="two.sided")$n}) # We use sapply because pwr.t.test doesn't know how to deal with a sequence of effect sizes 
+samplesize.effectsizes.09 <-sapply(effectsizes, function(d){pwr.t.test(sig.level=0.05,d=d,power=0.9,type=c("paired"),alternative="two.sided")$n})
+plot(effectsizes,
+     samplesize.effectsizes.08,
+     xlim=c(0,1),
+     xlab="Effect size",
+     ylab="Required sample size",
+     type="b",
+     col="darkblue",
+     lwd=5,axes=FALSE)
+lines(effectsizes,samplesize.effectsizes.09,col="turquoise",lwd=5,type="b")
+axis(1,at=c(0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1))
+axis(2,at=c(1000,500,350,100,50,10,0))
+legend(x="topright",lwd=5,bty="n",legend=c("power=0.8","power=0.9"),col=c("darkblue","turquoise"))
+text(x=0.9,y=650,labels="sig.level=0.05",col="darkorange")
+```
+
+<font size="3" color="blue">*Exercise:* *Try the other 2 scenarios. How many individuals do you need with (1) small effect size, alpha at 0.01, power at 0.8? (2) medium effect size, alpha at 0.05, power at 0.9?*</font>
+
+
+<p>&nbsp;</p>
+**Example 2**
+
+Recall our research question: Has frog mortality changed in current COVID-19 situation in Ontario compared to before?
+
+1. Null hypothesis: the frog mortality rate does not correlate with traffic in Ontario (correlation coefficient r=0).
+Alternative hypothesis: the frog mortality rate increase with traffic in Ontario (correlation coefficient r>0).
+
+2. Statistical analysis: correlation test. Null hypothesis is the true population correlation coefficient is 0. Assumptions: 
+    - Both variables should be normally distributed. 
+    - Both variables are continous (interval or ratio). 
+    - Two vairables are linearly related.
+
+3. I want to test how many individuals I need with: 
+    - small effect size, alpha at 2, power at 0.8 
+    - small effect size, alpha at 0.01, power at 0.8
+    - medium effect size, alpha at 0.05, power at 0.9 
+
+4. Coding.
+
+
+```{r}
+# n is the sample size and r is the correlation, notice our alternative is greater
+pwr.r.test(r = 0.2, sig.level = 0.05, power = 0.8, alternative="greater")
+
+pwr.r.test(r = 0.2, sig.level = 0.01, power = 0.8, alternative="greater")
+
+pwr.r.test(r = 0.35, sig.level = 0.05, power = 0.8, alternative="greater")
 ```
 
 
+<p>&nbsp;</p>
+<font size="3" color="cornflowerBlue">*It's your show time!*</font>
+<font size="3" color="violet">*In reality, one would expect frog mortality is affected by many factors, such as predation and climate. Thus one would expect the mean mortality rate changes across years. That is to say, with or without the pandemic frog mortality rate might change in 2020 as a natural pattern. We are interested in whether frog mortality change unusually in 2020 compared to the past 10 years and if so, whether it is because of the pandemic lockdown. **Ying** raised a hypothesis that frog mortality rate change in 2020 deviates from the changing pattern in the past 10 years. Do you think this is a good hypothesis? How would you design your study and do statistical analyses?*</font>
 
 
-#### Estimation Stats? (Ying)
+
+<p>&nbsp;</p>
+
+#### 3.3 Alternative to power analysis - Estimation Stats (Ying)
+
+<font size="2" color="gray">*Ying highly recommends you to read authoritative papers for learning. Here are some:* </font> 
+
+- <font size="2" color="gray">*Sullivan, G. M., and R. Feinn. 2012. Using effect size — or why the P Value is not enough. Journal of Graduate Medical Education 4(3): 279-282*</font>
+- <font size="2" color="gray">*Coe, R. 2002. It's the effect size, stupid! What effect size is and why it is important. Annual Conference of the British Educational Research Association; University of Exeter, England.*</font>
+
 There have been a lot of discussions in terms of not using p-value. 
 
 Check this website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background. 
 
-Some example papers: 
+Confidence interval: 
 
-  * Sullivan and Feinn. 2002. Using Effect Size—or Why the P Value Is Not Enough.
-
-
-- Test width of confidence interval for effect size 
+- 
 
 
 ```{r}
+# Estimation stats: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
 # Codes are from https://cran.r-project.org/web/packages/dabestr/vignettes/using-dabestr.html 
 library(dplyr)
 
@@ -354,6 +511,10 @@ plot(two.group.unpaired, color.column = Gender)
 
 ```
 
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 
 #### dplyr (20 min) (Ying):
 

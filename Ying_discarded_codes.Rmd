@@ -1,0 +1,113 @@
+---
+title: "Discrarded codes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**1A. Manual coding**
+
+Imagine you are going to sample 2019 and 2020 and will have two groups of mortality rate data. Your research question is whether the mean mortality rate between 2019 and 2020 is different. In other words, whether the difference of mean mortality rate is from sampling error. To be able to statistically test it, you want to know how many individuals (i.e. sample size) you need to have that power. 
+
+Let's have a look at the sample size at 20. It's harder to tell whether two samples are two different populations or the same population. 
+
+```{r, echo=FALSE,warning=FALSE,message=FALSE}
+par(mfrow=c(1,2))
+set.seed(42)
+hist(rnorm(20,24),breaks=20,col=rgb(0,0,1,1/4),xlim=c(20,30),main="Histogram (n=20)",xlab="values") # centered at 24 
+hist(rnorm(20,26),breaks=20,add=T,col=rgb(1,0,0,1/4),xlim=c(20,30)) # centered at 26
+curve(dnorm(x, mean=25, sd=1)*7, 
+      col="black", lwd=2, add=TRUE, yaxt="n")
+set.seed(42)
+hist(rnorm(20,24),breaks=20,col=rgb(0,0,1,1/4),xlim=c(20,30),main="Histogram (n=20)",xlab="values") # centered at 24 
+hist(rnorm(20,26),breaks=20,add=T,col=rgb(1,0,0,1/4),xlim=c(20,30)) # centered at 26
+curve(dnorm(x, mean=24, sd=1)*7, 
+      col="blue", lwd=2, add=TRUE, yaxt="n")
+curve(dnorm(x, mean=26, sd=1)*7, 
+      col="red", lwd=2, add=TRUE, yaxt="n")
+```
+
+
+Let's have a look at the sample size at 500. Now it's easier to see that they are probably not from the same population. 
+
+
+```{r, echo=FALSE,warning=FALSE,message=FALSE}
+set.seed(42)
+hist(rnorm(500,24),breaks=30,col=rgb(0,0,1,1/4),xlim=c(20,30),main="Histogram (n=500)",xlab="values") # centered at 24 
+hist(rnorm(500,26),breaks=30,add=T,col=rgb(1,0,0,1/4),xlim=c(20,30)) # centered at 26
+curve(dnorm(x, mean=24, sd=1)*100, 
+      col="blue", lwd=2, add=TRUE, yaxt="n")
+curve(dnorm(x, mean=26, sd=1)*100, 
+      col="red", lwd=2, add=TRUE, yaxt="n")
+```
+
+Now you see how sample size make a difference. Now I want to show you how effect size makes a difference. The plot is made from two normal distributions with the same standard deviation but difference mean values, blue 24 and red 24.2. That is to say the true population mean difference (i.e. effect size) is only 0.2, which makes it harder to tell whether the sampling from the same population or not. So the first point I want to make is that effect size can affect our statistical power. 
+
+The second point I want to make is that alpha level can affect our statistical power too. We know that we always have sampling error and we will only have an estimate of true population mean. We can also calculate a 95% confidence interval for that true population mean. 
+
+```{r, echo=FALSE,warning=FALSE,message=FALSE}
+par(mfrow=c(1,2))
+set.seed(42)
+hist(rnorm(500,24),breaks=30,col=rgb(0,0,1,1/4),xlim=c(20,30),main="Histogram (n=500)",xlab="values") # centered at 24 
+hist(rnorm(500,24.2),breaks=30,add=T,col=rgb(1,0,0,1/4),xlim=c(20,30)) # centered at 26
+
+set.seed(42)
+hist(rnorm(10000,24),breaks=30,col=rgb(0,0,1,1/4),xlim=c(20,30),main="Histogram (n=10000)",xlab="values") # centered at 24 
+hist(rnorm(10000,24.2),breaks=30,add=T,col=rgb(1,0,0,1/4),xlim=c(20,30)) # centered at 26
+```
+
+
+
+
+How do you statistically test it? How do you calculate your statistical power? 
+
+We use paired t-test. When a sample of size n is drawn from a population having a normal (or nearly normal) distribution, the sample mean can be transformed into a t statistic, using the equation bellow.
+
+t = [ μ1 - μ2 ] / [ s(diff) / sqrt(n) ]
+
+
+```{r}
+n <- 20
+m1 <- 24 # assuming the 1st sample mean is 24 
+m2 <- 26 # assuming the 2nd sample mean is 26
+d <- m2-m1
+sdiff <- 1 # standard deviation of the differences of paired data is 1 
+(error <- sdiff/sqrt(n))
+t <- d/error
+
+
+#se <- sqrt(sd1*sd1/num1+sd2*sd2/num2)
+
+a <- 5
+s <- 2 
+n <- 20 # sample size is 20 
+(error <- qt(0.975,df=n-1)*s/sqrt(n)) # calculate standard error for the mean. qt() quantile function for the student t distribution. 
+(left <- a-error) # left boundary of 95% confidence interval 
+(right <- a+error) # right boundary of 95% confidence interval 
+
+(assumed <- a + 2) # assume true mean is 26 
+(tleft <- (left-assumed)/(s/sqrt(n))) # t scores for the left value
+(tright <- (right-assumed)/(s/sqrt(n))) # t scores for the right value
+(p <- pt(tright,df=n-1)-pt(tleft,df=n-1)) # probablity of type II error
+1-p # power
+
+ncp <- 1.5/(s/sqrt(n)) # non-centrality parameter
+t <- qt(0.975,df=n-1) 
+pt(t,df=n-1,ncp=ncp)-pt(-t,df=n-1,ncp=ncp)
+1-(pt(t,df=n-1,ncp=ncp)-pt(-t,df=n-1,ncp=ncp))
+```
+
+
+Here are two examples of density probability t distributions. 
+
+```{r figs, echo=FALSE,warning=FALSE,message=FALSE,fig.width=6,fig.height=5,fig.cap="\\label{fig:figs}Figure 1. Two t distributions (degrees of freedom at 3 and 10) and the standard normal distribution."}
+t.values <- seq(-4,4,.1)
+plot(x = t.values,y = dt(t.values,3), type = "l", lty = "dotted", ylim = c(0,.4), xlab = "t", ylab = "probability density function f(t)")
+lines(t.values,dt(t.values,10),lty = "dashed")
+lines(t.values, dnorm(t.values), col="red")
+legend("topright",legend =c("df=3","df=10","normal"), lty =c("solid","dashed","dotted"),col=c("black","black","red"), bty = "n")
+```
+
+*Side note: If you tell me a noncentrality parameter and a degree of freedom, I can draw you a t distribution. Just like if you tell me a mean value and standard deviation, I can draw a normal distribution. Probability is an area underneath the probability density distribution curve.*

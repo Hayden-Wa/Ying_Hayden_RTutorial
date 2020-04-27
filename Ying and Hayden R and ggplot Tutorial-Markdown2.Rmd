@@ -152,7 +152,7 @@ dummy <- rep("dummy", N)
 id <- 1: N
  
  tibble::tibble(
-    Before = c1, During = c2,
+    Before = C1, During = C2,
     Dummy = dummy,
     Species = species, ID = id)
 

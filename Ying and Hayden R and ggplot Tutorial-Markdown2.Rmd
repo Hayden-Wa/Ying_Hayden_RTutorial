@@ -140,7 +140,37 @@ Data <- cbind(NewYear, NewLocation, NewSpecies, Frog_Mort_Total)
   
 2. how to export the data set
 
-3. power analysis????? (can go if need be)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <p>&nbsp;</p>

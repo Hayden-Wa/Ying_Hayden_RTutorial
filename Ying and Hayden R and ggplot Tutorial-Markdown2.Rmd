@@ -80,40 +80,10 @@ Two <font size="4" color="orange">hypotheses</font> raised:
   -start with 1 species and 1 location, add more in if you can later
   
 ```{r}
-# Frog Mortality 
-Frog_Mort <- rnorm(n=99, mean = 0.25, sd=0.2) # sd=1 will give you many negative values and values over 1
-length(Frog_Mort[which(Frog_Mort<0)]) # If there are negative values, we could change them to positive
-length(Frog_Mort[which(Frog_Mort>1)]) # If there are values over 1, need to delete them 
-Frog_Mort[which(Frog_Mort<0)] <- abs(Frog_Mort[which(Frog_Mort<0)])
-Frog_Mort <- sort(Frog_Mort) # smaller values at the beginning
 
-Cars <- rnorm(n=99, mean = 50, sd = 8) # sd is a bit too small? 
-Cars <- sort(Cars)
-
-# Assign cars to frog mortality in a dataset 
-dat <- data.frame(Frog_Mort, Cars) # small cars have small frog mortality 
-
-# add locations to it 
-dat$Location <- rep("Opinicon Road",99)
-dat$Year <- rep("2001",99)
-
-# then we create another 2 datasets with another 2 locations and year 2001 (the mean and sd for cars and frog mortality can be changed), we can merge them together. Year 2001 will be complete.
-# then we repeat it to create another 10 years. And merge them all together. 
-# We can probably write a loop to do this. 
-
-Species <- c("Anaxyrus fowleri", "Pseudacris crucifer", "Rana pipiens")
-Location <- c("Opinicon Road", "Hyw15", "Jones Falls")
-Year <- seq(2010, 2020, by=1)
-Cars_Op <- rnorm(n=33, mean = 50, sd = 1)
-Cars_H15 <- rnorm(n=33, mean = 60, sd = 1)
-Cars_Falls <- rnorm(n=33, mean = 40, sd =1)
-
-######
-#######################################################################################################
-####### Hayden's stuff
 
 Frog_Mort <- c((rnorm(n=90, mean = 26, sd = 5)), (rnorm(n = 9, mean = 24, sd = 5)))# assuming average frog mortality of 26% initially and then 24% after covid hit
-Frog_Mort
+
 Species <- c("Anaxyrus fowleri", "Pseudacris crucifer", "Rana pipiens")
 Location <- c("Opinicon Road", "Opinicon Road", "Opinicon Road", "Hwy15", "Hwy15", "Hyw15", "Jones Falls", "Jones Falls", "Jones Falls")
 Year <- seq(2010, 2020, by=1)

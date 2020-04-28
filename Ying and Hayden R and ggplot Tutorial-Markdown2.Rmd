@@ -128,8 +128,10 @@ Location <- rep(Location, 9)
 #Now we can make our data frame!
 
 Data1 <- cbind(Year, Location, Species, Frog_Mort)
-?cbind()
+Data1 <- data.frame(Data1)
+
 head(Data1)
+
 
 ```
 
@@ -723,9 +725,29 @@ plot(two.group.unpaired, color.column = Gender)
 
 
 #### ggplot (20min) (Ying and Hayden):
+
+```{r}
+library(ggplot2)
+```
+
+
 1. qplot 
+
+```{r}
+qplot(Species, Frog_Mort, Data1, geom = "auto")
+```
+
 2. plotting basic functions in ggplot using geoms
-    + boxplot plot: mortality vs year 
+    + boxplot plot: mortality vs species 
+    
+```{r}
+Species_Mort <- ggplot(Data1, aes(x=Year, y=Frog_Mort))+
+  geom_boxplot()
+Species_Mort
+
+
+```
+    
 3. adding trend lines 
     + scatter plot + linear model: mortality vs traffic 
 4. adding multiple data sets to same graph

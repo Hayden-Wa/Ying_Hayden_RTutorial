@@ -286,6 +286,8 @@ write.csv(Data1, 'FrogPandemic.csv')
 <font size="2" color="red"> *Ying highly recommends you to read authoritative books and papers for learning. Here are some:* </font> 
 
 - <font size="2" color="gray">*Cohen, J. 1988. Statistical Power Analysis for the Behavioral Sciences, Second Edition. Hillsdale, New Jersey: Lawrence Erlbaum Associates.*</font>
+- <font size="2" color="gray">*Murphy, K. R. and Myors, B. 2004. Statistical Power Analysis: A Simple and General Model for Traditional and Modern Hypothesis Tests. Mahwah, New Jersey:  Lawrence Erlbaum Associates.*</font>
+- <font size="2" color="gray">*Sedlmeier, P. and Gigerenzer, G. 1989. Do Studies of Statistical Power Have an Effect on the Power of Studies?  Psychological Bulletin, 105(2), 309-316.*</font>
 - <font size="2" color="gray">*Hoenig, J.M., and D. M. Heisey. 2001. The Abuse of Power: The Pervasive Fallacy of Power Calculations for Data Analysis. The American Statistician, 55(1): 19-24.*</font>
 - <font size="2" color="gray">*Levine, M., and Ensom M. H. H. 2001. Post Hoc Power Analysis: An Idea Whose Time Has Passed?  Pharmacotherapy, 21(4), 405-409.*</font>
 
@@ -541,6 +543,48 @@ Assumptions:
 4. Coding.
 
 
+**Manual coding** 
+
+Calculating power is quite similar to the process of calculating p-value. Ying recommends you to read *Statistical Power Analysis for the Behavioral Sciences* by Cohen if you are interested in the detailed calculation process. Teaching the mathematics is beyond our ability and also beyond the purpose of this tutorial. Here is a small tutorial on the t-test to give you some flavors: https://www.cyclismo.org/tutorial/R/power.html#calculating-many-powers-from-a-t-distribution. 
+
+Despite of not covering it for this tutorial, we want to **emphasize** on <font size="3" color="red"> UNDERSTANDING THE LOGIC AND ASSUMPTIONS OF THE STATISTICS </font>. You may not know how to cook qie-xiang (an eggplant dish cooked with "10 chickens" in the Chinese classic novel *The Story of the Stone*), but you are probably able to tell whether eggplants are nicely cooked. So as the statistics. You may forget or not know the exact equations, but you should understand it such that you are able to tell whether it is used appropriately. 
+
+What matters? Ying says the distribution, in other words, the statistical method. 
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+curve(dnorm(x,24,1), xlim=c(20,28), main="Normal density",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
+curve(dnorm(x,23,1),add=TRUE,col="turquoise",lwd=5)
+axis(1,at=c(20,21,22,23,24,25,26,27,28))
+
+# define shaded region
+from.z1 <- 20
+to.z1 <- qnorm(.025,mean=24,sd=1)
+
+from.z2 <- qnorm(.975,mean=24,sd=1)
+to.z2 <- 28
+
+S.x  <- c(from.z1, seq(from.z1, to.z1, 0.01), to.z1)
+S.y1  <- c(0, dnorm(seq(from.z1, to.z1, 0.01),24,1), 0)
+S.y2  <- c(0, dnorm(seq(from.z1, to.z1, 0.01),23,1), 0)
+polygon(S.x,S.y2, col="turquoise",border=NA)
+polygon(S.x,S.y1, col="blue",border=NA)
+
+S.x  <- c(from.z2, seq(from.z2, to.z2, 0.01), to.z2)
+S.y1  <- c(0, dnorm(seq(from.z2, to.z2, 0.01),24,1), 0)
+S.y2  <- c(0, dnorm(seq(from.z2, to.z2, 0.01),23,1), 0)
+polygon(S.x,S.y1, col="blue",border=NA)
+polygon(S.x,S.y2, col="turquoise",border=NA)
+
+abline(v=to.z1,lty="dashed")
+abline(v=from.z2,lty="dashed")
+
+text(x=25,y=0.37,labels=expression(paste(mu, "=24")),col="darkblue")
+text(x=24.2,y=0.3,labels=expression(paste(mu, "=23")),col="turquoise")
+text(x=21.8,y=0.37,labels=expression(paste(alpha, "=0.025")))
+text(x=26,y=0.37,labels=expression(paste(alpha, "=0.025")))
+```
+
+
 **Package pwr:**
 
 - Official release on CRAN: http://cran.r-project.org/web/packages/pwr/ 
@@ -635,25 +679,52 @@ pwr.r.test(r = 0.35, sig.level = 0.05, power = 0.8, alternative="greater")
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 <p>&nbsp;</p>
 
-#### 3.3 Alternative to p value - Estimation Stats (Ying)
+#### 3.3 Alternative to p value - Estimation stats and bootstraping (Ying)
 
 <font size="2" color="red"> *The following materials are prepared by Ying upon her understanding, which means they can be flawed.* </font> 
 
 <font size="2" color="red"> *Ying highly recommends you to read authoritative books and papers for learning. Here are some:* </font> 
 
-- <font size="2" color="gray">*Sullivan, G. M., and R. Feinn. 2012. Using effect size — or why the P Value is not enough. Journal of Graduate Medical Education 4(3): 279-282*</font>
 - <font size="2" color="gray">*Coe, R. 2002. It's the effect size, stupid! What effect size is and why it is important. Annual Conference of the British Educational Research Association; University of Exeter, England.*</font>
+- <font size="2" color="gray">*Sullivan, G. M., and R. Feinn. 2012. Using effect size — or why the p value is not enough. Journal of Graduate Medical Education 4(3): 279-282*</font>
+- <font size="2" color="gray"> *Wasserstein, R. L., A. L. Schirm, and N. A. Lazar. 2019. Moving to a world beyond “p < 0.05”. The American Statistician, 73:1-19.*</font>
+- <font size="2" color="gray"> *Halsey, L. G. 2019. The reign of the p-value is wver: What alternative analyses could we employ to fill the power vacuum? Biology Letters 15: 20190174*</font>
+- <font size="2" color="gray"> *Amrhein, V., S. Greenland, and B. Mcshane. 2019. Retire statistical significance. Nature 567:305-307.*</font>
 
-There have been a lot of discussions in terms of not using p-value. 
 
-Check this website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background. 
+Problems of p-value and statistically significant:
 
-Confidence interval: 
-
+- Not informative of observed data 
 - 
 
+
+Alternatives:
+
+- Bayesian analysis 
+- 
+
+
+
+**Package dabestr** 
+
+- Website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
+- Official release on CRAN: https://cran.r-project.org/web/packages/dabestr/index.html 
+- Github link: https://github.com/ACCLAB/dabestr 
 
 ```{r}
 # Estimation stats: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
@@ -704,6 +775,14 @@ two.group.unpaired
 plot(two.group.unpaired, color.column = Gender)
 
 ```
+
+
+
+
+
+
+
+
 
 
 

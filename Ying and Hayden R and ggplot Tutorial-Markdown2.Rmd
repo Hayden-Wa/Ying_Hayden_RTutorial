@@ -2,7 +2,9 @@
 title: "Hayden and Ying's R tutorial"
 author: "Hayden Wainwright and Ying Chen, Lougheed Lab, Queen's University"
 date: "04/30/2020"
-output: html_document
+output:
+  html_document: default
+  fig_caption: default
 ---
 
 <style type="text/css">
@@ -151,28 +153,29 @@ species <- c(rep('Anaxyrus fowleri', N/3), rep('Pseudacris crucifer', N/3), rep(
 dummy <- rep("dummy", N)
 id <- 1: N
  
- tibble::tibble(
-    Before = C1, During = C2,
-    Dummy = dummy,
-    Species = species, ID = id)
+ 
+# tibble::tibble(
+#    Before = C1, During = C2,
+#    Dummy = dummy,
+#    Species = species, ID = id)
 
-Data2 <- 
-  wide.data %>%
-  tidyr::gather(key = Group, value = Frog_Mortality, -ID, -Species, -Dummy)
+#Data2 <- 
+#  wide.data %>%
+#  tidyr::gather(key = Group, value = Frog_Mortality, -ID, -Species, -Dummy)
 
 library(dabestr)
 
-tow.group.unpaired <- my.data %>%
-  dabest(Group, Measurement, 
+#tow.group.unpaired <- my.data %>%
+#  dabest(Group, Measurement, 
          # The idx below passes "Control" as the control group, 
          # and "Group1" as the test group. The mean difference
          # will be computed as mean(Group1) - mean(Control1).
-         idx = c("Pre-Pandemic", "Pandemic"), 
-         paired = FALSE)
+#         idx = c("Pre-Pandemic", "Pandemic"), 
+#         paired = FALSE)
 
-two.group.unpaired 
+#two.group.unpaired 
 
-plot(two.group.unpaired, color.column = Species)
+#plot(two.group.unpaired, color.column = Species)
 
 
 
@@ -264,11 +267,14 @@ plot(two.group.unpaired, color.column = Gender)
 
 <p>&nbsp;</p>
 
-## Section 3. Power analysis (30-40min) (Ying)
-#### 3.1 What is power analysis? (5 min)
+## Section 3. Power analysis (Ying)
+#### 3.1 What is power analysis? 
 
-<font size="2" color="red"> *The following materials are prepared by Ying upon her understanding, which means they can be flawed.Ying highly recommends you to read authoritative papers for learning. Here are some:* </font> 
+<font size="2" color="red"> *The following materials are prepared by Ying upon her understanding, which means they can be flawed.* </font> 
 
+<font size="2" color="red"> *Ying highly recommends you to read authoritative books and papers for learning. Here are some:* </font> 
+
+- <font size="2" color="gray">*Cohen, J. 1988. Statistical Power Analysis for the Behavioral Sciences, Second Edition. Hillsdale, New Jersey: Lawrence Erlbaum Associates.*</font>
 - <font size="2" color="gray">*Hoenig, J.M., and D. M. Heisey. 2001. The Abuse of Power: The Pervasive Fallacy of Power Calculations for Data Analysis. The American Statistician, 55(1): 19-24.*</font>
 - <font size="2" color="gray">*Levine, M., and Ensom M. H. H. 2001. Post Hoc Power Analysis: An Idea Whose Time Has Passed?  Pharmacotherapy, 21(4), 405-409.*</font>
 
@@ -279,7 +285,7 @@ plot(two.group.unpaired, color.column = Gender)
 
 - Power = Pr (Reject H0 | H1 is true) = 1 - Type II error rate
 
-```{r, echo=FALSE,warning=FALSE}
+```{r, echo=FALSE,warning=FALSE,message=FALSE}
 # How to make a nice table? Please check: https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html 
 
 library(knitr)
@@ -295,6 +301,66 @@ kable(PAtable, caption="Table 1. Hypotheis testing.") %>%
   kable_styling(c("striped", "hover"), full_width = FALSE, position = "left")
 ```
 
+Let's use a Z test on the population mean to recall hypothesis testing. 
+
+Let's assume the true population mean frog mortality rate from Lake Opinicon is 24%. And the alternative hypothesis is that the true population mean is smaller than 24%. 
+
+H0: μ = 24
+
+H1: μ < 24
+
+Let's visualize the hypothesis testing. The curve is the sampling distribution of $\bar{x}$ when the null hypothesis is true. Recall that $\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i$
+If your sample mean falls in the blue region that is smaller than 22.35, then you reject your hypothesis as your alpha value is set to 0.05. 
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+curve(dnorm(x,24,1), xlim=c(20,28), main="Normal density",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
+axis(1,at=c(20,21,22,23,24,25,26,27,28))
+
+# define shaded region
+from.z <- 20
+to.z <- qnorm(.05,mean=24,sd=1)
+
+S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+S.y  <- c(0, dnorm(seq(from.z, to.z, 0.01),24,1), 0)
+polygon(S.x,S.y, col="blue",border=NA)
+
+text(x=21,y=0.1,labels=expression(paste(alpha, "=0.05")),col="darkblue")
+text(x=25,y=0.37,labels=expression(paste(mu, "=24")),col="darkblue")
+#text(x=22.8,y=0,labels=round(to.z,1))
+abline(v=to.z,lty="dashed")
+arrows(21,0.08,21.8,0.04)
+text(x=21,y=0.2,labels="Reject H0")
+text(x=24,y=0.2,labels="Do not reject H0")
+```
+
+
+Let's look at a curve when the alternative hypothesis is true, i.e. μ < 24. The power (turquoise area) is the probability of rejecting H0 if the true mean is 23. 
+
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+curve(dnorm(x,24,1), xlim=c(20,28), main="Normal density",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
+curve(dnorm(x,23,1),add=TRUE,col="turquoise",lwd=5)
+axis(1,at=c(20,21,22,23,24,25,26,27,28))
+
+# define shaded region
+from.z <- 20
+to.z <- qnorm(.05,mean=24,sd=1)
+
+S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+S.y1  <- c(0, dnorm(seq(from.z, to.z, 0.01),24,1), 0)
+S.y2  <- c(0, dnorm(seq(from.z, to.z, 0.01),23,1), 0)
+polygon(S.x,S.y2, col="turquoise",border=NA)
+polygon(S.x,S.y1, col="blue",border=NA)
+
+text(x=25,y=0.37,labels=expression(paste(mu, "=24")),col="darkblue")
+text(x=24.2,y=0.3,labels=expression(paste(mu, "<24")),col="turquoise")
+text(x=21.8,y=0.37,labels=expression(paste(alpha, "=0.05")))
+abline(v=to.z,lty="dashed")
+arrows(21,0.2,21.2,0.14)
+text(x=21,y=0.23,labels="Power",size=5)
+```
+
+
 
 Power depends on:
 
@@ -302,15 +368,120 @@ Power depends on:
     + Pr (observed | H0 is ture) < alpha, reject null 
     + Pr (observed | H0 is ture) > alpha, fail to reject null 
 
-- **Effect size** - magnitude of the difference between groups. Larger effects, larger power. Notice that there are many definitions of the effect size. We will stick with the simplest one, which is the difference of two group means divided by the pooled standard deviation. 
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+curve(dnorm(x,24,1), xlim=c(20,28), main="Normal density",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
+curve(dnorm(x,23,1),add=TRUE,col="turquoise",lwd=5)
+axis(1,at=c(20,21,22,23,24,25,26,27,28))
+
+# define shaded region
+from.z <- 20
+to.z <- qnorm(.01,mean=24,sd=1)
+to.z1 <- qnorm(.05,mean=24,sd=1)
+
+S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+S.y1  <- c(0, dnorm(seq(from.z, to.z, 0.01),24,1), 0)
+S.y2  <- c(0, dnorm(seq(from.z, to.z, 0.01),23,1), 0)
+polygon(S.x,S.y2, col="turquoise",border=NA)
+polygon(S.x,S.y1, col="blue",border=NA)
+
+text(x=25,y=0.37,labels=expression(paste(mu, "=24")),col="darkblue")
+text(x=24.2,y=0.3,labels=expression(paste(mu, "<24")),col="turquoise")
+abline(v=to.z,lty="dashed")
+text(x=21,y=0.37,labels=expression(paste(alpha, "=0.01")))
+abline(v=to.z1,lty="dashed")
+text(x=22.3,y=0.39,labels=expression(paste(alpha, "=0.05")))
+#arrows(21,0.2,21.2,0.14)
+#text(x=21,y=0.23,labels="Power",size=5)
+```
+
+
+- **Effect size** - magnitude of the difference between groups. Larger effects, larger power. Notice that there are many definitions of the effect size. We will stick with the simplest one, which is the difference of two group means. 
+
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+curve(dnorm(x,24,1), xlim=c(19,28), ylim=c(0,0.45), main="Normal density",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
+curve(dnorm(x,22,1),add=TRUE,col="turquoise",lwd=5)
+axis(1,at=c(19,20,21,22,23,24,25,26,27,28))
+arrows(23,0.42,22,0.42)
+
+# define shaded region
+from.z <- 19
+to.z <- qnorm(.05,mean=24,sd=1)
+
+S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+S.y1  <- c(0, dnorm(seq(from.z, to.z, 0.01),24,1), 0)
+S.y2  <- c(0, dnorm(seq(from.z, to.z, 0.01),22,1), 0)
+polygon(S.x,S.y2, col="turquoise",border=NA)
+polygon(S.x,S.y1, col="blue",border=NA)
+
+curve(dnorm(x,23,1),add=TRUE,lty="dashed")
+
+text(x=25,y=0.37,labels=expression(paste(mu, "=24")),col="darkblue")
+text(x=23,y=0.43,labels=expression(paste(mu, "<24")),col="turquoise")
+text(x=22.9,y=0.04,labels=expression(paste(alpha, "=0.05")))
+abline(v=to.z,lty="dashed")
+```
+
+
+
 
 - **Sample size** - Larger sample size, smaller sampling error, larger statistical power. 
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+
+par(mfrow=c(3,1))
+# sd=2
+curve(dnorm(x,24,2), xlim=c(15,32),ylim=c(0,0.8), main="Normal density (sd=2)",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
+curve(dnorm(x,22,2),add=TRUE,col="turquoise",lwd=5)
+axis(1,at=c(15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32))
+
+# define shaded region
+from.z <- 15
+to.z <- qnorm(.05,mean=24,sd=2)
+
+S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+S.y1  <- c(0, dnorm(seq(from.z, to.z, 0.01),24,2), 0)
+S.y2  <- c(0, dnorm(seq(from.z, to.z, 0.01),22,2), 0)
+polygon(S.x,S.y2, col="turquoise",border=NA)
+polygon(S.x,S.y1, col="blue",border=NA)
+
+# sd=1
+curve(dnorm(x,24,1), xlim=c(15,32),ylim=c(0,0.8), main="Normal density (sd=1)",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
+curve(dnorm(x,23,1),add=TRUE,col="turquoise",lwd=5)
+axis(1,at=c(15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32))
+
+# define shaded region
+from.z <- 15
+to.z <- qnorm(.05,mean=24,sd=1)
+
+S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+S.y1  <- c(0, dnorm(seq(from.z, to.z, 0.01),24,1), 0)
+S.y2  <- c(0, dnorm(seq(from.z, to.z, 0.01),23,1), 0)
+polygon(S.x,S.y2, col="turquoise",border=NA)
+polygon(S.x,S.y1, col="blue",border=NA)
+
+
+# sd=0.5
+curve(dnorm(x,24,0.5), xlim=c(15,32), ylim=c(0,0.8), main="Normal density (sd=0.5)",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
+curve(dnorm(x,23,0.5),add=TRUE,col="turquoise",lwd=5)
+axis(1,at=c(15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32))
+
+# define shaded region
+from.z <- 15
+to.z <- qnorm(.05,mean=24,sd=0.5)
+
+S.x  <- c(from.z, seq(from.z, to.z, 0.01), to.z)
+S.y1  <- c(0, dnorm(seq(from.z, to.z, 0.01),24,0.5), 0)
+S.y2  <- c(0, dnorm(seq(from.z, to.z, 0.01),23,0.5), 0)
+polygon(S.x,S.y2, col="turquoise",border=NA)
+polygon(S.x,S.y1, col="blue",border=NA)
+```
+
 
 - **Your purpose** - For example, one might want to see if the regression coefficient is different from zero, while the other wants to get a very precise estimate of the regression coefficient with a very small confidence interval around it. This second purpose requires a larger sample size than does merely seeing if the regression coefficient is different from zero. 
 
-**A power analysis** = study plan
+**A power analysis = study plan**
 
-- Can be used to estimate the "minimum" sample size required for an experiment, given a desired significance level, effect size, and statistical power (more recommendations fall between 0.8 and 0.9). For example, how many locations (sample size) do we need to detect the frog mortality decrease of 10% (effect size) from 2019 to 2020 with a statistical power of 80% and a significance level of 0.05? **But you don't want to just sample the "minimum" sample size, you want add a few more to give yourself some "wiggle-room" just in case.**
+- Can be used to estimate the "minimum" sample size required for an experiment, given a desired significance level, effect size, and statistical power (many recommendations fall between 0.8 and 0.9). For example, how many locations (sample size) do we need to detect the frog mortality decrease of 10% (effect size) from 2019 to 2020 with a statistical power of 80% and a significance level of 0.05? **But you don't want to just sample the "minimum" sample size, you want add a few more to give yourself some "wiggle-room" just in case.**
 
 - Note: Post-experiment power calculations should <font size="2" color="red"> **NOT**</font> be used to aid in the interpretation of the experimental results. Details see (Hoenig and Heisey 2001).
 
@@ -325,11 +496,11 @@ Power depends on:
 
 #### 3.2 How to do power analysis? (10 min)
 
-1. Think through your research project and your purpose of the study (coefficient different from 0, precise point estimate, replication, etc.). Specify your null hypothesis. 
+1. Think through your research project and your purpose of the study (coefficient different from 0, precise point estimate, etc.). Specify your null hypothesis. 
 
 2. List your statistical analysis. Try to know as much as possible about the statistical techniques, such as assumptions, types of data, whether there is alpha inflation issue, etc. 
 
-3. Decide on the effect size (or a range of effect sizes), significance level (alpha), sample sizes and/or power. How to guestimate the values? Do a literature review, a pilot study and using Cohen's recommendations. Here is Cohen's recommendations for the effect size: 
+3. Decide on the effect size (or a range of effect sizes), significance level (alpha), and power. How to guestimate the values? Do a literature review, a pilot study and using Cohen's recommendations. Here is Cohen's recommendations for the effect size: 
     - Small effect:  1% of the variance; d = 0.2 (too small to detect other than statistically) 
     - Medium effect:  6% of the variance; d = 0.5 (apparent with careful observation)
     - Large effect: at least 15% of the variance; d = 0.8 (apparent with a superficial glance; unlikely to be the focus of research because it is too obvious)
@@ -343,7 +514,7 @@ Recall our research question: Has frog mortality changed in current COVID-19 sit
 
 1. Null hypothesis: the mean frog mortality in Ontario in 2019 and 2020 is the same.
 
-2. Statistical test: paired t-test. 
+2. Statistical test: paired t-test (because two sample sets are the same subjects but two measurements of mortality). 
 Null hypothesis: the true mean difference is zero. 
 Assumptions: 
     - The dependent variable must be continuous (interval/ratio).
@@ -358,15 +529,22 @@ Assumptions:
 
 4. Coding.
 
+
+**Package pwr:**
+
+- Official release on CRAN: http://cran.r-project.org/web/packages/pwr/ 
+- Github link: https://github.com/heliosdrm/pwr
+
 ```{r}
 library(pwr)
-
 # 1. small effect size, alpha at 0.05, power at 0.8
-# n is the sample size, d is the effect size, sig.level is alpha, type indicates a two-sample t-test, one-sample t-test or paired t-test, alternative hypothesis is two.sided (default)
+# n is the sample size, d is the effect size, Cohen's d = mean/SD for paired t-test, sig.level is alpha, type indicates a two-sample t-test, one-sample t-test or paired t-test, alternative hypothesis is two.sided (default)
 pwr.t.test(d = 0.2, sig.level = 0.05, power = 0.8, type = c("paired"),alternative="two.sided")
+```
 
+Now let's visualize how power change with sample size. 
 
-# Visualize how power change with sample size 
+```{r,echo=FALSE}
 # plot color names: https://www.maplesoft.com/support/help/Maple/view.aspx?path=plot/colornames 
 samplesizes <- seq(from=10,to=300,by=10)
 power.samplesizes <- pwr.t.test(n=samplesizes,sig.level=0.05,d=0.2,type=c("paired"),alternative="two.sided")$power
@@ -383,8 +561,11 @@ axis(1,at=c(0,50,100,150,200,250,300))
 axis(2,at=c(0,0.25,0.5,0.75,1),labels=paste(c(0,25,50,75,100),"%"))
 text(x=50,y=0.9,labels="sig.level=0.05",col="darkblue")
 text(x=50,y=0.8,labels="effect.size=0.2",col="darkblue")
+```
 
-# Visualize how sample size change with effect size 
+Now let's visualize how sample size changes with effect size. 
+
+```{r,echo=FALSE}
 effectsizes <- seq(from=0.1,to=0.9,by=0.1)
 samplesize.effectsizes.08 <-sapply(effectsizes, function(d){pwr.t.test(sig.level=0.05,d=d,power=0.8,type=c("paired"),alternative="two.sided")$n}) # We use sapply because pwr.t.test doesn't know how to deal with a sequence of effect sizes 
 samplesize.effectsizes.09 <-sapply(effectsizes, function(d){pwr.t.test(sig.level=0.05,d=d,power=0.9,type=c("paired"),alternative="two.sided")$n})
@@ -445,9 +626,11 @@ pwr.r.test(r = 0.35, sig.level = 0.05, power = 0.8, alternative="greater")
 
 <p>&nbsp;</p>
 
-#### 3.3 Alternative to power analysis - Estimation Stats (Ying)
+#### 3.3 Alternative to p value - Estimation Stats (Ying)
 
-<font size="2" color="gray">*Ying highly recommends you to read authoritative papers for learning. Here are some:* </font> 
+<font size="2" color="red"> *The following materials are prepared by Ying upon her understanding, which means they can be flawed.* </font> 
+
+<font size="2" color="red"> *Ying highly recommends you to read authoritative books and papers for learning. Here are some:* </font> 
 
 - <font size="2" color="gray">*Sullivan, G. M., and R. Feinn. 2012. Using effect size — or why the P Value is not enough. Journal of Graduate Medical Education 4(3): 279-282*</font>
 - <font size="2" color="gray">*Coe, R. 2002. It's the effect size, stupid! What effect size is and why it is important. Annual Conference of the British Educational Research Association; University of Exeter, England.*</font>

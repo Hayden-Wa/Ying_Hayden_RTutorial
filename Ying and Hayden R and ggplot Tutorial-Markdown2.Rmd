@@ -29,9 +29,9 @@ library(knitr)
 
 ## Preface
 
-In <font size="4" color="red">2020</font>, a pandemic of the virus called <font size="4" color="blue">COVID-19</font> hit human society harshly, with <font size="4" color="dark blue">millions of</font> people infected and <font size="4" color="dark blue">thousands of</font> people died. As simple country <font size="4" color="orange">biologists</font>, we stay at home at the behest of Government of Canada, blessing *Homo sapiens* for <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
+In <font size="4" color="red">2020</font>, a pandemic caused by the  <font size="4" color="blue">COVID-19</font> virus hit human society harshly, with <font size="4" color="dark blue">million </font> people infected and <font size="4" color="dark blue">thousands of</font> people dead. As simple country <font size="4" color="orange">biologists</font>, we are staying home at the behest of Government of Canada, helping *Homo sapiens* maintain good  <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
 
-<font size="5">**Don't give up!**</font>   says a rock. We continue <font size="4" color="brown">academia</font> and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decide today is the day, to do <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
+As the rock below reminds us <font size="5">**Don't give up!**</font>. We will continue our <font size="4" color="brown">academic</font> pursuits and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decided today is the day, to actually do some <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
 
 
 - Section 1: R basics
@@ -39,7 +39,7 @@ In <font size="4" color="red">2020</font>, a pandemic of the virus called <font 
 - Section 3: Power analysis 
 - Section 4: Data visulization 
 
-A real <font size="4" color="orange">biological question</font> to be solved: 
+We have a real <font size="4" color="orange">biological question</font> to be solved: 
 
 - Has frog mortality changed in current COVID-19 situation in Ontario compared to before?
 
@@ -48,7 +48,7 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 - H0: It does not change.
 - H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown. 
 
-<font size="4" color="blue">R</font>eady? Go!
+<font size="4" color="blue">R</font>eady? Let's Go!
 
 ![<font size="4" color="gray">*You are my rock! Love from Lougheed Lab. Photo by La Vita E Bella.*</font>](IMG_6184.JPG)
 
@@ -66,7 +66,7 @@ Two <font size="4" color="orange">hypotheses</font> raised:
     + Quick-R: https://www.statmethods.net/index.html 
     + ggplot2: https://learnr.wordpress.com 
 7. packages
-    + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra
+    + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra, dabestr
 
 
 <p>&nbsp;</p>
@@ -79,6 +79,191 @@ Two <font size="4" color="orange">hypotheses</font> raised:
   -combine the data from different years into one data frame
   -start with 1 species and 1 location, add more in if you can later
   
+
+```{r}
+
+
+Frog_Mort <- c((rnorm(n=90, mean = 26, sd = 1)), (rnorm(n = 9, mean = 24, sd = 1)))# assuming average frog mortality of 26% initially and then 24% after covid hit
+
+Species <- c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens")
+Location <- c("Opinicon Road", "Hwy15", "Jones Falls")
+#Location <- c("Opinicon Road", "Opinicon Road", "Opinicon Road", "Hwy15", "Hwy15", "Hyw15", "Jones Falls", "Jones Falls", "Jones Falls")
+Year <- seq(2010, 2020, by=1)
+Cars_Op <- rnorm(n=1, mean = 50, sd = 8)
+Cars_H15 <- rnorm(n=1, mean = 60, sd = 8)
+Cars_Falls <- rnorm(n=1, mean = 40, sd =8)
+Cars <- c(Cars_Op, Cars_H15, Cars_Falls)
+
+Year <- rep(Year, each = 9)
+Species <- rep(Species, 11)
+Location <- rep(Location, 9)
+#Cars <- rep(Cars, )
+#Now we can make our data frame!
+
+Data1 <- cbind(Year, Location, Species, Frog_Mort)
+Data1 <- data.frame(Data1)
+
+head(Data1)
+
+
+
+
+# Frog Mortality 
+
+mor_mean_pool <- rnorm(n=10, mean=25, sd=1)
+car_mean_pool <- rnorm(n=10, mean=50, sd=1)
+
+for (i in 1:seq(2010,2019,1)){
+  mean <- sample(mor_mean_pool, 1) 
+  car <- sample(car_mean_pool, 1)
+  
+  Frog_Mort_op_2010 <- rnorm(n=3, mean = mean, sd=1)
+  Frog_Mort_op_2010 <- sort(Frog_Mort) # smaller values at the beginning
+  Cars_op_2010 <- rnorm(n=3, mean = 50, sd = 8) 
+  Cars_op_2010 <- sort(Cars)
+# Assign cars to frog mortality in a dataset
+  dat_op_2010 <- data.frame(Frog_Mort_op_2010, Cars_op_2010) # small cars have small frog mortality 
+# add locations to it
+  dat_op_2010$Location <- rep("Opinicon Road",3)
+  dat_op_2010$Year <- rep("2010",3)
+  dat_op_2010$Species <- c("x","y","z")
+
+  
+}
+
+mean <- sample(mor_mean_pool, 1) 
+car <- sample(car_mean_pool, 1)
+  
+Frog_Mort_op_2010 <- rnorm(n=3, mean = mean, sd=1)
+Frog_Mort_op_2010 <- sort(Frog_Mort) # smaller values at the beginning
+Cars_op_2010 <- rnorm(n=3, mean = 50, sd = 8) 
+Cars_op_2010 <- sort(Cars)
+# Assign cars to frog mortality in a dataset
+dat_op_2010 <- data.frame(Frog_Mort_op_2010, Cars_op_2010) # small cars have small frog mortality 
+# add locations to it
+dat_op_2010$Location <- rep("Opinicon Road",3)
+dat_op_2010$Year <- rep("2010",3)
+dat_op_2010$Species <- c("x","y","z")
+
+View(dat_op_2010)
+
+# then we create another 2 datasets with another 2 locations and year 2001 (the mean and sd for cars and frog mortality can be changed), we can merge them together. Year 2001 will be complete.
+# then we repeat it to create another 10 years. And merge them all together. 
+# We can probably write a loop to do this. 
+
+
+```
+
+Alternatively we can also build our data set this way:
+  
+  
+```{r}
+library(dplyr)
+
+set.seed(54321)
+ 
+N_Int = 90
+N_COVID = 9
+N_OpRoad = 33
+N_Hyw15 = 33
+N_Falls = 33
+N = 5
+
+C1 <- rnorm(N, mean = 25, sd = 25)
+C2 <- rnorm(N, mean = 20, sd = 25)
+species <- c(rep('Anaxyrus fowleri', N/3), rep('Pseudacris crucifer', N/3), rep('Rana pipiens', N/3))
+dummy <- rep("dummy", N)
+id <- 1: N
+ 
+ 
+# tibble::tibble(
+#    Before = C1, During = C2,
+#    Dummy = dummy,
+#    Species = species, ID = id)
+
+#Data2 <- 
+#  wide.data %>%
+#  tidyr::gather(key = Group, value = Frog_Mortality, -ID, -Species, -Dummy)
+
+library(dabestr)
+
+#tow.group.unpaired <- my.data %>%
+#  dabest(Group, Measurement, 
+         # The idx below passes "Control" as the control group, 
+         # and "Group1" as the test group. The mean difference
+         # will be computed as mean(Group1) - mean(Control1).
+#         idx = c("Pre-Pandemic", "Pandemic"), 
+#         paired = FALSE)
+
+#two.group.unpaired 
+
+#plot(two.group.unpaired, color.column = Species)
+
+
+
+```
+  
+  From website example:
+  
+```{r}
+library(dplyr)
+
+set.seed(54321)
+#N = 10
+N = 40
+#N = 100
+c1 <- rnorm(N, mean = 100, sd = 25)
+c2 <- rnorm(N, mean = 100, sd = 50)
+g1 <- rnorm(N, mean = 120, sd = 25)
+g2 <- rnorm(N, mean = 80, sd = 50)
+g3 <- rnorm(N, mean = 100, sd = 12)
+g4 <- rnorm(N, mean = 100, sd = 50)
+gender <- c(rep('Male', N/2), rep('Female', N/2))
+dummy <- rep("Dummy", N)
+id <- 1: N
+
+wide.data <- 
+  tibble::tibble(
+    Control1 = c1, Control2 = c2,
+    Group1 = g1, Group2 = g2, Group3 = g3, Group4 = g4,
+    Dummy = dummy,
+    Gender = gender, ID = id)
+
+
+my.data   <- 
+  wide.data %>%
+  tidyr::gather(key = Group, value = Measurement, -ID, -Gender, -Dummy)
+
+
+library(dabestr)
+
+two.group.unpaired <- 
+  my.data %>%
+  dabest(Group, Measurement, 
+         # The idx below passes "Control" as the control group, 
+         # and "Group1" as the test group. The mean difference
+         # will be computed as mean(Group1) - mean(Control1).
+         idx = c("Control1", "Group1"), 
+         paired = FALSE)
+
+two.group.unpaired 
+
+plot(two.group.unpaired, color.column = Gender)
+```
+  
+  
+  
+2. how to export the data set
+
+It may be useful, from time to time, to be able to save your data set that was created in R. To do this we simply can use the 'write.csv()' command as shown bellow for the first data set we created. 
+
+```{r}
+write.csv(Data1, 'FrogPandemic.csv')
+
+```
+
+
+3. power analysis
 
 
 
@@ -619,6 +804,7 @@ plot(two.group.unpaired, color.column = Gender)
 
 
 
+<<<<<<< HEAD
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 
@@ -674,5 +860,7 @@ Species_Mort
 
 
 
+=======
+>>>>>>> 18adb922f301d7ddbdd76b8359af08b8566b8720
 
 

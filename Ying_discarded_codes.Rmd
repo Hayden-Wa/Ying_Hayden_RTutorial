@@ -165,3 +165,61 @@ Cars_Falls <- rnorm(n=33, mean = 40, sd =1)
 ####### Hayden's stuff
 ```
 
+
+
+
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+#### dplyr (20 min) (Ying):
+
+1. Import Data
+2. How to change data into what you want
+3. how to get rid of NA in your data
+4. how to make a new collumn in your data
+5. how to change the orientation and layout of your data (Hayden)
+6. double checking data sets for spelling mistakes
+7. piping and filtering/sort data
+8. creating new data frames
+9. how to make a small program (for loop, if statements, make your own functions) (Hayden to help)
+
+
+
+#### ggplot (20min) (Ying and Hayden):
+
+```{r}
+library(ggplot2)
+```
+
+
+1. qplot 
+
+
+
+2. plotting basic functions in ggplot using geoms
+    + boxplot plot: mortality vs species 
+    
+```{r}
+Species_Mort <- ggplot(Data1, aes(x=Year, y=Frog_Mort))+
+  geom_boxplot()
+Species_Mort
+
+
+```
+    
+3. adding trend lines 
+    + scatter plot + linear model: mortality vs traffic 
+4. adding multiple data sets to same graph
+5. anotate text and axises
+6. changin colour schemes and shapes
+    + fill color of different frog species, different locations
+7. change theme of a plot 
+8. plotting models 
+9. confidence intervals and standard error bars
+    + linear model: mortality vs traffic, mortality vs food supply in ontario 
+10. how to add multiple plots to one graph space
+
+
+

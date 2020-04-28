@@ -119,21 +119,35 @@ Data generation old code
 
 ```{r}
 # Frog Mortality 
-Frog_Mort <- rnorm(n=99, mean = 0.25, sd=0.2) # sd=1 will give you many negative values and values over 1
-length(Frog_Mort[which(Frog_Mort<0)]) # If there are negative values, we could change them to positive
-length(Frog_Mort[which(Frog_Mort>1)]) # If there are values over 1, need to delete them 
-Frog_Mort[which(Frog_Mort<0)] <- abs(Frog_Mort[which(Frog_Mort<0)])
+
+mor_mean_pool <- rnorm(n=10, mean=25, sd=1)
+car_mean_pool <- 
+
+for (i in 1:seq(2010,2019,1)){
+  mean <- sample(1, mean_pool) 
+  
+  Frog_Mort <- rnorm(n=3, mean = mean, sd=0.2) # sd=1 will give you many negative values and values over 1
+#length(Frog_Mort_op_2011[which(Frog_Mort_op_2011<0)]) # If there are negative values, we could change them to positive
+#length(Frog_Mort_op_2011[which(Frog_Mort_op_2011>1)]) # If there are values over 1, need to delete them 
+#Frog_Mort_op_2011[which(Frog_Mort_op_2011<0)] <- abs(Frog_Mort_op_2011[which(Frog_Mort_op_2011<0)])
 Frog_Mort <- sort(Frog_Mort) # smaller values at the beginning
 
-Cars <- rnorm(n=99, mean = 50, sd = 8) # sd is a bit too small? 
+
+Cars <- rnorm(n=3, mean = 50, sd = 8) 
 Cars <- sort(Cars)
 
 # Assign cars to frog mortality in a dataset 
-dat <- data.frame(Frog_Mort, Cars) # small cars have small frog mortality 
+dat_op_2011 <- data.frame(Frog_Mort_op_2011, Cars_op_2011) # small cars have small frog mortality 
 
 # add locations to it 
-dat$Location <- rep("Opinicon Road",99)
-dat$Year <- rep("2001",99)
+dat_op_2011$Location <- rep("Opinicon Road",3)
+dat_op_2011$Year <- rep("2001",3)
+dat_op_2011$Species <- c("x","y","z")
+}
+
+
+
+
 
 # then we create another 2 datasets with another 2 locations and year 2001 (the mean and sd for cars and frog mortality can be changed), we can merge them together. Year 2001 will be complete.
 # then we repeat it to create another 10 years. And merge them all together. 

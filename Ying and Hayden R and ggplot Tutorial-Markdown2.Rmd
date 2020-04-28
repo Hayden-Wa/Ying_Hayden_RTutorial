@@ -29,9 +29,9 @@ library(knitr)
 
 ## Preface
 
-In <font size="4" color="red">2020</font>, a pandemic of the virus called <font size="4" color="blue">COVID-19</font> hit human society harshly, with <font size="4" color="dark blue">millions of</font> people infected and <font size="4" color="dark blue">thousands of</font> people died. As simple country <font size="4" color="orange">biologists</font>, we stay at home at the behest of Government of Canada, blessing *Homo sapiens* for <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
+In <font size="4" color="red">2020</font>, a pandemic caused by the  <font size="4" color="blue">COVID-19</font> virus hit human society harshly, with <font size="4" color="dark blue">million </font> people infected and <font size="4" color="dark blue">thousands of</font> people dead. As simple country <font size="4" color="orange">biologists</font>, we are staying home at the behest of Government of Canada, helping *Homo sapiens* maintain good  <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
 
-<font size="5">**Don't give up!**</font>   says a rock. We continue <font size="4" color="brown">academia</font> and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decide today is the day, to do <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
+As the rock below reminds us <font size="5">**Don't give up!**</font>. We will continue our <font size="4" color="brown">academic</font> pursuits and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decided today is the day, to actually do some <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
 
 
 - Section 1: R basics
@@ -39,7 +39,7 @@ In <font size="4" color="red">2020</font>, a pandemic of the virus called <font 
 - Section 3: Power analysis 
 - Section 4: Data visulization 
 
-A real <font size="4" color="orange">biological question</font> to be solved: 
+We have a real <font size="4" color="orange">biological question</font> to be solved: 
 
 - Has frog mortality changed in current COVID-19 situation in Ontario compared to before?
 
@@ -48,7 +48,7 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 - H0: It does not change.
 - H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown. 
 
-<font size="4" color="blue">R</font>eady? Go!
+<font size="4" color="blue">R</font>eady? Let's Go!
 
 ![<font size="4" color="gray">*You are my rock! Love from Lougheed Lab. Photo by La Vita E Bella.*</font>](IMG_6184.JPG)
 
@@ -66,7 +66,7 @@ Two <font size="4" color="orange">hypotheses</font> raised:
     + Quick-R: https://www.statmethods.net/index.html 
     + ggplot2: https://learnr.wordpress.com 
 7. packages
-    + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra
+    + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra, dabestr
 
 
 <p>&nbsp;</p>
@@ -82,19 +82,21 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 ```{r}
 
 
-Frog_Mort <- c((rnorm(n=90, mean = 26, sd = 5)), (rnorm(n = 9, mean = 24, sd = 5)))# assuming average frog mortality of 26% initially and then 24% after covid hit
+Frog_Mort <- c((rnorm(n=90, mean = 26, sd = 1)), (rnorm(n = 9, mean = 24, sd = 1)))# assuming average frog mortality of 26% initially and then 24% after covid hit
 
-Species <- c("Anaxyrus fowleri", "Pseudacris crucifer", "Rana pipiens")
-Location <- c("Opinicon Road", "Opinicon Road", "Opinicon Road", "Hwy15", "Hwy15", "Hyw15", "Jones Falls", "Jones Falls", "Jones Falls")
+Species <- c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens")
+Location <- c("Opinicon Road", "Hwy15", "Jones Falls")
+#Location <- c("Opinicon Road", "Opinicon Road", "Opinicon Road", "Hwy15", "Hwy15", "Hyw15", "Jones Falls", "Jones Falls", "Jones Falls")
 Year <- seq(2010, 2020, by=1)
-Cars_Op <- rnorm(n=33, mean = 50, sd = 8)
-Cars_H15 <- rnorm(n=33, mean = 60, sd = 8)
-Cars_Falls <- rnorm(n=33, mean = 40, sd =8)
+Cars_Op <- rnorm(n=1, mean = 50, sd = 8)
+Cars_H15 <- rnorm(n=1, mean = 60, sd = 8)
+Cars_Falls <- rnorm(n=1, mean = 40, sd =8)
+Cars <- c(Cars_Op, Cars_H15, Cars_Falls)
 
 Year <- rep(Year, each = 9)
 Species <- rep(Species, 11)
 Location <- rep(Location, 9)
-
+Cars <- rep(Cars, )
 #Now we can make our data frame!
 
 Data1 <- cbind(Year, Location, Species, Frog_Mort)
@@ -782,9 +784,7 @@ library(ggplot2)
 
 1. qplot 
 
-```{r}
-qplot(Species, Frog_Mort, Data1, geom = "auto")
-```
+
 
 2. plotting basic functions in ggplot using geoms
     + boxplot plot: mortality vs species 

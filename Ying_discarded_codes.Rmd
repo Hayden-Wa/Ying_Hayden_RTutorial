@@ -116,6 +116,7 @@ legend("topright",legend =c("df=3","df=10","normal"), lty =c("solid","dashed","d
 Data generation old code
 
 
+
 ```{r}
 # Frog Mortality 
 Frog_Mort <- rnorm(n=99, mean = 0.25, sd=0.2) # sd=1 will give you many negative values and values over 1

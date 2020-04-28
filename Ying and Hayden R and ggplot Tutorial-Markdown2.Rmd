@@ -29,9 +29,9 @@ library(knitr)
 
 ## Preface
 
-In <font size="4" color="red">2020</font>, a pandemic of the virus called <font size="4" color="blue">COVID-19</font> hit human society harshly, with <font size="4" color="dark blue">millions of</font> people infected and <font size="4" color="dark blue">thousands of</font> people died. As simple country <font size="4" color="orange">biologists</font>, we stay at home at the behest of Government of Canada, blessing *Homo sapiens* for <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
+In <font size="4" color="red">2020</font>, a pandemic caused by the  <font size="4" color="blue">COVID-19</font> virus hit human society harshly, with <font size="4" color="dark blue">million </font> people infected and <font size="4" color="dark blue">thousands of</font> people dead. As simple country <font size="4" color="orange">biologists</font>, we are staying home at the behest of Government of Canada, helping *Homo sapiens* maintain good  <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
 
-<font size="5">**Don't give up!**</font>   says a rock. We continue <font size="4" color="brown">academia</font> and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decide today is the day, to do <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
+As the rock below reminds us <font size="5">**Don't give up!**</font>. We will continue our <font size="4" color="brown">academic</font> pursuits and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decided today is the day, to actually do some <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
 
 
 - Section 1: R basics
@@ -39,7 +39,7 @@ In <font size="4" color="red">2020</font>, a pandemic of the virus called <font 
 - Section 3: Power analysis 
 - Section 4: Data visulization 
 
-A real <font size="4" color="orange">biological question</font> to be solved: 
+We have a real <font size="4" color="orange">biological question</font> to be solved: 
 
 - Has frog mortality changed in current COVID-19 situation in Ontario compared to before?
 
@@ -48,7 +48,7 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 - H0: It does not change.
 - H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown. 
 
-<font size="4" color="blue">R</font>eady? Go!
+<font size="4" color="blue">R</font>eady? Let's Go!
 
 ![<font size="4" color="gray">*You are my rock! Love from Lougheed Lab. Photo by La Vita E Bella.*</font>](IMG_6184.JPG)
 
@@ -66,7 +66,7 @@ Two <font size="4" color="orange">hypotheses</font> raised:
     + Quick-R: https://www.statmethods.net/index.html 
     + ggplot2: https://learnr.wordpress.com 
 7. packages
-    + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra
+    + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra, dabestr
 
 
 <p>&nbsp;</p>
@@ -82,25 +82,59 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 ```{r}
 
 
-Frog_Mort <- c((rnorm(n=90, mean = 26, sd = 5)), (rnorm(n = 9, mean = 24, sd = 5)))# assuming average frog mortality of 26% initially and then 24% after covid hit
+Frog_Mort <- c((rnorm(n=90, mean = 26, sd = 1)), (rnorm(n = 9, mean = 24, sd = 1)))# assuming average frog mortality of 26% initially and then 24% after covid hit
 
-Species <- c("Anaxyrus fowleri", "Pseudacris crucifer", "Rana pipiens")
-Location <- c("Opinicon Road", "Opinicon Road", "Opinicon Road", "Hwy15", "Hwy15", "Hyw15", "Jones Falls", "Jones Falls", "Jones Falls")
+Species <- c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens")
+Location <- c("Opinicon Road", "Hwy15", "Jones Falls")
+#Location <- c("Opinicon Road", "Opinicon Road", "Opinicon Road", "Hwy15", "Hwy15", "Hyw15", "Jones Falls", "Jones Falls", "Jones Falls")
 Year <- seq(2010, 2020, by=1)
-Cars_Op <- rnorm(n=33, mean = 50, sd = 8)
-Cars_H15 <- rnorm(n=33, mean = 60, sd = 8)
-Cars_Falls <- rnorm(n=33, mean = 40, sd =8)
+Cars_Op <- rnorm(n=1, mean = 50, sd = 8)
+Cars_H15 <- rnorm(n=1, mean = 60, sd = 8)
+Cars_Falls <- rnorm(n=1, mean = 40, sd =8)
+Cars <- c(Cars_Op, Cars_H15, Cars_Falls)
 
 Year <- rep(Year, each = 9)
 Species <- rep(Species, 11)
 Location <- rep(Location, 9)
-
+Cars <- rep(Cars, )
 #Now we can make our data frame!
 
 Data1 <- cbind(Year, Location, Species, Frog_Mort)
 Data1 <- data.frame(Data1)
 
 head(Data1)
+
+
+
+
+# Frog Mortality 
+
+mor_mean_pool <- rnorm(n=10, mean=25, sd=1)
+car_mean_pool <- rnorm(n=10, mean=50, sd=1)
+
+for (i in 1:seq(2010,2019,1)){
+  mean <- sample(1, mor_mean_pool) 
+  car <- sample(1, car_mean_pool)
+  
+  Frog_Mort <- rnorm(n=3, mean = mean, sd=1)
+  Frog_Mort <- sort(Frog_Mort) # smaller values at the beginning
+  Cars <- rnorm(n=3, mean = 50, sd = 8) 
+  Cars <- sort(Cars)
+  # Assign cars to frog mortality in a dataset
+  dat_op_i <- data.frame(Frog_Mort_op_i, Cars_op_i) # small cars have small frog mortality 
+  # add locations to it
+  dat_op_2011$Location <- rep("Opinicon Road",3)
+  dat_op_2011$Year <- rep("2001",3)
+  dat_op_2011$Species <- c("x","y","z")
+}
+
+
+
+
+
+# then we create another 2 datasets with another 2 locations and year 2001 (the mean and sd for cars and frog mortality can be changed), we can merge them together. Year 2001 will be complete.
+# then we repeat it to create another 10 years. And merge them all together. 
+# We can probably write a loop to do this. 
 
 
 ```
@@ -753,61 +787,6 @@ plot(two.group.unpaired, color.column = Gender)
 
 
 
-
-
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-#### dplyr (20 min) (Ying):
-
-1. Import Data
-2. How to change data into what you want
-3. how to get rid of NA in your data
-4. how to make a new collumn in your data
-5. how to change the orientation and layout of your data (Hayden)
-6. double checking data sets for spelling mistakes
-7. piping and filtering/sort data
-8. creating new data frames
-9. how to make a small program (for loop, if statements, make your own functions) (Hayden to help)
-
-
-
-#### ggplot (20min) (Ying and Hayden):
-
-```{r}
-library(ggplot2)
-```
-
-
-1. qplot 
-
-```{r}
-qplot(Species, Frog_Mort, Data1, geom = "auto")
-```
-
-2. plotting basic functions in ggplot using geoms
-    + boxplot plot: mortality vs species 
-    
-```{r}
-Species_Mort <- ggplot(Data1, aes(x=Year, y=Frog_Mort))+
-  geom_boxplot()
-Species_Mort
-
-
-```
-    
-3. adding trend lines 
-    + scatter plot + linear model: mortality vs traffic 
-4. adding multiple data sets to same graph
-5. anotate text and axises
-6. changin colour schemes and shapes
-    + fill color of different frog species, different locations
-7. change theme of a plot 
-8. plotting models 
-9. confidence intervals and standard error bars
-    + linear model: mortality vs traffic, mortality vs food supply in ontario 
-10. how to add multiple plots to one graph space
 
 
 

@@ -112,23 +112,6 @@ head(Data1)
 mor_mean_pool <- rnorm(n=10, mean=25, sd=1)
 car_mean_pool <- rnorm(n=10, mean=50, sd=1)
 
-for (i in 1:seq(2010,2019,1)){
-  mean <- sample(mor_mean_pool, 1) 
-  car <- sample(car_mean_pool, 1)
-  
-  Frog_Mort_op_2010 <- rnorm(n=3, mean = mean, sd=1)
-  Frog_Mort_op_2010 <- sort(Frog_Mort) # smaller values at the beginning
-  Cars_op_2010 <- rnorm(n=3, mean = 50, sd = 8) 
-  Cars_op_2010 <- sort(Cars)
-# Assign cars to frog mortality in a dataset
-  dat_op_2010 <- data.frame(Frog_Mort_op_2010, Cars_op_2010) # small cars have small frog mortality 
-# add locations to it
-  dat_op_2010$Location <- rep("Opinicon Road",3)
-  dat_op_2010$Year <- rep("2010",3)
-  dat_op_2010$Species <- c("x","y","z")
-
-  
-}
 
 mean <- sample(mor_mean_pool, 1) 
 car <- sample(car_mean_pool, 1)
@@ -150,6 +133,28 @@ View(dat_op_2010)
 # then we repeat it to create another 10 years. And merge them all together. 
 # We can probably write a loop to do this. 
 
+mor_mean_pool <- rnorm(n=10, mean=25, sd=1)
+car_mean_pool <- rnorm(n=10, mean=50, sd=1)
+
+for (i in 1:seq(2010,2019,1)){
+  mean <- sample(mor_mean_pool, 1) 
+  car <- sample(car_mean_pool, 1)
+  
+  Frog_Mort_op_i <- rnorm(n=3, mean = mean, sd=1)
+  Frog_Mort_op_i <- sort(Frog_Mort) # smaller values at the beginning
+  Cars_op_i <- rnorm(n=3, mean = 50, sd = 8) 
+  Cars_op_i <- sort(Cars)
+# Assign cars to frog mortality in a dataset
+  dat_op_i <- data.frame(Frog_Mort_op_i, Cars_op_i) # small cars have small frog mortality 
+# add locations to it
+  dat_op_i$Location <- rep("Opinicon Road",3)
+  dat_op_i$Year <- rep("i",3)
+  dat_op_i$Species <- c("x","y","z")
+
+  
+}
+
+dat_op_i
 
 ```
 

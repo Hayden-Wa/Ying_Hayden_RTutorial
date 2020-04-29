@@ -133,28 +133,46 @@ View(dat_op_2010)
 # then we repeat it to create another 10 years. And merge them all together. 
 # We can probably write a loop to do this. 
 
+# Ying's codes 
+# a pool to draw mean mortality rate and mean number of car per hour 
 mor_mean_pool <- rnorm(n=10, mean=25, sd=1)
 car_mean_pool <- rnorm(n=10, mean=50, sd=1)
 
-for (i in 1:seq(2010,2019,1)){
-  mean <- sample(mor_mean_pool, 1) 
-  car <- sample(car_mean_pool, 1)
-  
-  Frog_Mort_op_i <- rnorm(n=3, mean = mean, sd=1)
-  Frog_Mort_op_i <- sort(Frog_Mort) # smaller values at the beginning
-  Cars_op_i <- rnorm(n=3, mean = 50, sd = 8) 
-  Cars_op_i <- sort(Cars)
-# Assign cars to frog mortality in a dataset
-  dat_op_i <- data.frame(Frog_Mort_op_i, Cars_op_i) # small cars have small frog mortality 
-# add locations to it
-  dat_op_i$Location <- rep("Opinicon Road",3)
-  dat_op_i$Year <- rep("i",3)
-  dat_op_i$Species <- c("x","y","z")
+# a dataset to store the data 
+year <- NA
+location <- NA
+species <- NA
+frog_mort <- NA
+car_num <- NA
+dat_all <- data.frame(frog_mort, car_num,year, location, species)
 
+loc_all <- c("Site A", "Site B", "Site B")
+
+for (j in 1:3){ # a loop to get location 
+  loc <- loc_all[j]
+for (i in seq(2010,2019,1)){ # generate the data for 2010 to 2019 (before pandemic)
+  mean_mor <- sample(mor_mean_pool, 1) 
+  mean_car <- sample(car_mean_pool, 1)
   
+  frog_mort <- rnorm(n=3, mean=mean_mor, sd=1)
+  frog_mort <- sort(frog_mort) # smaller values at the beginning
+  
+  car_num <- rnorm(n=3, mean=mean_car, sd=8)
+  car_num <- sort(car_num)
+  
+# Assign cars to frog mortality in a dataset
+  dat <- data.frame(frog_mort, car_num) # small cars have small frog mortality 
+  dat$year <- rep(i,3) # add year to the dataset 
+  dat$location <- rep(loc,3) # add location to the dataset 
+  dat$species <- c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens") # add species to the dataset 
+  
+  dat_all <- rbind(dat_all, dat)
+  
+  print(i)
+}
+print(j)
 }
 
-dat_op_i
 
 ```
 

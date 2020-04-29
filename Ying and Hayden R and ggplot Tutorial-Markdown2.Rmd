@@ -127,6 +127,135 @@ print(j)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <p>&nbsp;</p>
 
 ## Section 3. Power analysis (Ying)
@@ -628,36 +757,6 @@ plot(two.group.unpaired, color.column = Gender)
 
 ```
 
-
-
-
-```{r}
-
-N <- 90
-frog_mort <- rnorm(N, mean=26, sd=1)
-car_num <- rnorm(N, mean=50, sd=8)
-location <- c(rep("site 1",N/3), rep("site 2",N/3), rep("site 3",N/3))
-year <- rep(c(rep(2010, N/30),
-          rep(2011, N/30),
-          rep(2012, N/30),
-          rep(2013, N/30),
-          rep(2014, N/30),
-          rep(2015, N/30),
-          rep(2016, N/30),
-          rep(2017, N/30),
-          rep(2018, N/30),
-          rep(2019, N/30)),3)
-species <- rep(c("species 1","species 2","species 3"),30)
-
-dat_all <- 
-  tibble::tibble(
-    frog_mort=frog_mort,
-    car_num=car_num,
-    location =location ,
-    year=year,
-    species=species
-  )
-```
 
 
 

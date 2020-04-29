@@ -156,95 +156,58 @@ Alternatively we can also build our data set this way:
 ```{r}
 library(dplyr)
 
-set.seed(54321)
- 
-N_Int = 90
-N_COVID = 9
-N_OpRoad = 33
-N_Hyw15 = 33
-N_Falls = 33
-N = 5
+set.seed(911)
+N <- 90
+frog_mort <- rnorm(N, mean=26, sd=1)
+car_num <- rnorm(N, mean=50, sd=8)
+location <- c(rep("Site 1",N/3), rep("Site 2",N/3), rep("Site 3",N/3))
+year <- rep(c(rep(2010, N/30),
+          rep(2011, N/30),
+          rep(2012, N/30),
+          rep(2013, N/30),
+          rep(2014, N/30),
+          rep(2015, N/30),
+          rep(2016, N/30),
+          rep(2017, N/30),
+          rep(2018, N/30),
+          rep(2019, N/30)),3)
+species <- rep(c("species 1","species 2","species 3"),30)
 
-C1 <- rnorm(N, mean = 25, sd = 25)
-C2 <- rnorm(N, mean = 20, sd = 25)
-species <- c(rep('Anaxyrus fowleri', N/3), rep('Pseudacris crucifer', N/3), rep('Rana pipiens', N/3))
-dummy <- rep("dummy", N)
-id <- 1: N
- 
- 
-# tibble::tibble(
-#    Before = C1, During = C2,
-#    Dummy = dummy,
-#    Species = species, ID = id)
-
-#Data2 <- 
-#  wide.data %>%
-#  tidyr::gather(key = Group, value = Frog_Mortality, -ID, -Species, -Dummy)
-
-library(dabestr)
-
-#tow.group.unpaired <- my.data %>%
-#  dabest(Group, Measurement, 
-         # The idx below passes "Control" as the control group, 
-         # and "Group1" as the test group. The mean difference
-         # will be computed as mean(Group1) - mean(Control1).
-#         idx = c("Pre-Pandemic", "Pandemic"), 
-#         paired = FALSE)
-
-#two.group.unpaired 
-
-#plot(two.group.unpaired, color.column = Species)
-
-
-
-```
-  
-  From website example:
-  
-```{r}
-library(dplyr)
-
-set.seed(54321)
-#N = 10
-N = 40
-#N = 100
-c1 <- rnorm(N, mean = 100, sd = 25)
-c2 <- rnorm(N, mean = 100, sd = 50)
-g1 <- rnorm(N, mean = 120, sd = 25)
-g2 <- rnorm(N, mean = 80, sd = 50)
-g3 <- rnorm(N, mean = 100, sd = 12)
-g4 <- rnorm(N, mean = 100, sd = 50)
-gender <- c(rep('Male', N/2), rep('Female', N/2))
-dummy <- rep("Dummy", N)
-id <- 1: N
-
-wide.data <- 
+dat_all2 <- 
   tibble::tibble(
-    Control1 = c1, Control2 = c2,
-    Group1 = g1, Group2 = g2, Group3 = g3, Group4 = g4,
-    Dummy = dummy,
-    Gender = gender, ID = id)
+    frog_mort=frog_mort,
+    car_num=car_num,
+    location =location ,
+    year=year,
+    species=species
+  )
+#generating 2020 data and then merging it with previous data set
+
+loc_all2 <- c("Site 1", "Site 2", "Site 3")
+
+for (j in 1:3){ # a loop to get location 
+  loc <- loc_all2[j]
+  
+  frog_mort <- rnorm(n=3, mean=15, sd=1)
+  frog_mort <- sort(frog_mort) # smaller values at the beginning
+  
+  car_num <- rnorm(n=3, mean=20, sd=8)
+  car_num <- sort(car_num)
+  
+# Assign cars to frog mortality in a dataset
+  dat2 <- data.frame(frog_mort, car_num) # small cars have small frog mortality 
+  dat2$year <- rep(2020,3) # add year to the dataset 
+  dat2$location <- rep(loc,3) # add location to the dataset 
+  dat2$species <- c("Species A", "Species B", "Species C") # add species to the dataset 
+  
+#now we merge the data sets to gerneate our final full data set
+  
+  dat_all2 <- rbind(dat_all2, dat2)
+
+}
 
 
-my.data   <- 
-  wide.data %>%
-  tidyr::gather(key = Group, value = Measurement, -ID, -Gender, -Dummy)
 
-
-library(dabestr)
-
-two.group.unpaired <- 
-  my.data %>%
-  dabest(Group, Measurement, 
-         # The idx below passes "Control" as the control group, 
-         # and "Group1" as the test group. The mean difference
-         # will be computed as mean(Group1) - mean(Control1).
-         idx = c("Control1", "Group1"), 
-         paired = FALSE)
-
-two.group.unpaired 
-
-plot(two.group.unpaired, color.column = Gender)
 ```
   
   
@@ -255,6 +218,7 @@ It may be useful, from time to time, to be able to save your data set that was c
 
 ```{r}
 write.csv(dat_all, 'FrogPandemic.csv')
+write.csv(dat_all2, 'FrogPandemic2.csv')
 
 ```
 

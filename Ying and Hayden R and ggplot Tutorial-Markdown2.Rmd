@@ -95,7 +95,7 @@ frog_mort <- NA
 car_num <- NA
 dat_all <- data.frame(frog_mort, car_num,year, location, species)
 
-loc_all <- c("Site A", "Site B", "Site B")
+loc_all <- c("Site A", "Site B", "Site C")
 
 for (j in 1:3){ # a loop to get location 
   loc <- loc_all[j]
@@ -120,6 +120,31 @@ for (i in seq(2010,2019,1)){ # generate the data for 2010 to 2019 (before pandem
   print(i)
 }
 print(j)
+}
+
+# Now to generate the data for 2020
+
+
+loc_all <- c("Site A", "Site B", "Site C")
+
+for (j in 1:3){ # a loop to get location 
+  loc <- loc_all[j]
+  
+  frog_mort <- rnorm(n=3, mean=15, sd=1)
+  frog_mort <- sort(frog_mort) # smaller values at the beginning
+  
+  car_num <- rnorm(n=3, mean=20, sd=8)
+  car_num <- sort(car_num)
+  
+# Assign cars to frog mortality in a dataset
+  dat <- data.frame(frog_mort, car_num) # small cars have small frog mortality 
+  dat$year <- rep(2020,3) # add year to the dataset 
+  dat$location <- rep(loc,3) # add location to the dataset 
+  dat$species <- c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens") # add species to the dataset 
+  
+  dat_all <- rbind(dat_all, dat)
+  
+print(c("2020", j))
 }
 
 
@@ -229,7 +254,7 @@ plot(two.group.unpaired, color.column = Gender)
 It may be useful, from time to time, to be able to save your data set that was created in R. To do this we simply can use the 'write.csv()' command as shown bellow for the first data set we created. 
 
 ```{r}
-write.csv(Data1, 'FrogPandemic.csv')
+write.csv(dat_all, 'FrogPandemic.csv')
 
 ```
 

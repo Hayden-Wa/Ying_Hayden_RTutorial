@@ -249,7 +249,7 @@ PAcol3 <- c("Reject H0", "Type I error", "Correct. Power")
 PAtable <- data.frame(PAcol1, PAcol2, PAcol3)
 colnames(PAtable) <- NULL
 
-kable(PAtable, caption="Table 1. Hypotheis testing.") %>%
+kable(PAtable, caption="Table 1. Hypothesis testing.") %>%
   kable_styling(c("striped", "hover"), full_width = FALSE, position = "left")
 ```
 

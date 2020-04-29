@@ -484,7 +484,12 @@ Calculating power is quite similar to the process of calculating p-value. Ying r
 
 Despite of not covering it for this tutorial, we want to **emphasize** on <font size="3" color="red"> UNDERSTANDING THE LOGIC AND ASSUMPTIONS OF THE STATISTICS </font>. You may not know how to cook qie-xiang (an eggplant dish cooked with "10 chickens" in the Chinese classic novel *The Story of the Stone*), but you are probably able to tell whether eggplants are nicely cooked. So as the statistics. You may forget or not know the exact equations, but you should understand it such that you are able to tell whether it is used appropriately. 
 
-What matters? Ying says the distribution, in other words, the statistical method. 
+The general steps to calculate power: 
+
+- Decide your distribution/ statistical analyses. 
+- Calculate the values (e.g. Z scores) for 95% confidence interval (or other alpha values)? 
+- Calculate the probablity of the 95% confidence interval under the true alternative hypothesis distribution (decided by your effect size). 
+
 
 ```{r,echo=FALSE,warning=FALSE,message=FALSE}
 curve(dnorm(x,24,1), xlim=c(20,28), main="Normal density",axes=FALSE,xlab="",ylab="",col="blue",lwd=5)
@@ -753,9 +758,9 @@ library(ggplot2)
     + boxplot plot: mortality vs species 
     
 ```{r}
-Species_Mort <- ggplot(Data1, aes(x=Year, y=Frog_Mort))+
-  geom_boxplot()
-Species_Mort
+#Species_Mort <- ggplot(Data1, aes(x=Year, y=Frog_Mort))+
+#  geom_boxplot()
+#Species_Mort
 
 
 ```

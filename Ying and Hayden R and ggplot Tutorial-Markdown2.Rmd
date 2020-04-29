@@ -21,14 +21,11 @@ h4.date { /* Header 4 - and the author and data headers use this too  */
   text-align: center;
 }
 </style>
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
 ```
-
 ## Preface
-
 In <font size="4" color="red">2020</font>, a pandemic caused by the  <font size="4" color="blue">COVID-19</font> virus hit human society harshly, with <font size="4" color="dark blue">million </font> people infected and <font size="4" color="dark blue">thousands of</font> people dead. As simple country <font size="4" color="orange">biologists</font>, we are staying home at the behest of Government of Canada, helping *Homo sapiens* maintain good  <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
 
 As the rock below reminds us <font size="5">**Don't give up!**</font>. We will continue our <font size="4" color="brown">academic</font> pursuits and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decided today is the day, to actually do some <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
@@ -37,7 +34,8 @@ As the rock below reminds us <font size="5">**Don't give up!**</font>. We will c
 - Section 1: R basics
 - Section 2: Data simulation 
 - Section 3: Power analysis 
-- Section 4: Data visulization 
+- Section 4: Estimation statistics
+- Section 5: Data visulization 
 
 We have a real <font size="4" color="orange">biological question</font> to be solved: 
 
@@ -55,14 +53,13 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 
 <p>&nbsp;</p>
 
-## Section 1: R Basics (5-10min tops) (Hayden):
+## Section 1: R Basics
 1. how to make a project
 2. markdown vs script
 3. github links
 4. handling error messages 
         (googling answers)
-
-5. other helpful links (Ying)
+5. other helpful links 
     + Quick-R: https://www.statmethods.net/index.html 
     + ggplot2: https://learnr.wordpress.com 
 6. packages
@@ -71,7 +68,7 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 
 <p>&nbsp;</p>
 
-## Section 2: Data simulation (30min) (Hayden):
+## Section 2: Data simulation
 1. how to generate a "fake" data set
 
   -(Frog mortality, frog species (3), location (3), sampling year (2010-2020), Total number of cars)
@@ -80,13 +77,10 @@ Two <font size="4" color="orange">hypotheses</font> raised:
   -start with 1 species and 1 location, add more in if you can later
   
 ```{r}
-
-
 # Ying's codes 
 # a pool to draw mean mortality rate and mean number of car per hour 
 mor_mean_pool <- rnorm(n=10, mean=25, sd=1)
 car_mean_pool <- rnorm(n=10, mean=50, sd=1)
-
 # a dataset to store the data 
 year <- NA
 location <- NA
@@ -96,6 +90,10 @@ car_num <- NA
 dat_all <- data.frame(frog_mort, car_num,year, location, species)
 
 loc_all <- c("Site A", "Site B", "Site C")
+
+
+loc_all <- c("Site A", "Site B", "Site C")
+
 
 for (j in 1:3){ # a loop to get location 
   loc <- loc_all[j]
@@ -123,10 +121,7 @@ print(j)
 }
 
 # Now to generate the data for 2020
-
-
 loc_all <- c("Site A", "Site B", "Site C")
-
 for (j in 1:3){ # a loop to get location 
   loc <- loc_all[j]
   
@@ -147,15 +142,10 @@ for (j in 1:3){ # a loop to get location
 print(c("2020", j))
 }
 
-
+dat_all <- dat_all[-1,] # delete the first NA row. We can also use package dplyr to filter rows with NA. 
 ```
 
-Alternatively we can also build our data set this way:
-  
-  
 ```{r}
-library(dplyr)
-
 set.seed(911)
 N <- 90
 frog_mort <- rnorm(N, mean=26, sd=1)
@@ -172,7 +162,6 @@ year <- rep(c(rep(2010, N/30),
           rep(2018, N/30),
           rep(2019, N/30)),3)
 species <- rep(c("species 1","species 2","species 3"),30)
-
 dat_all2 <- 
   tibble::tibble(
     frog_mort=frog_mort,
@@ -182,15 +171,14 @@ dat_all2 <-
     species=species
   )
 #generating 2020 data and then merging it with previous data set
-
 loc_all2 <- c("Site 1", "Site 2", "Site 3")
-
 for (j in 1:3){ # a loop to get location 
   loc <- loc_all2[j]
   
   frog_mort <- rnorm(n=3, mean=15, sd=1)
   frog_mort <- sort(frog_mort) # smaller values at the beginning
   
+
   car_num <- rnorm(n=3, mean=20, sd=8)
   car_num <- sort(car_num)
   
@@ -203,11 +191,7 @@ for (j in 1:3){ # a loop to get location
 #now we merge the data sets to gerneate our final full data set
   
   dat_all2 <- rbind(dat_all2, dat2)
-
 }
-
-
-
 ```
   
   
@@ -219,35 +203,7 @@ It may be useful, from time to time, to be able to save your data set that was c
 ```{r}
 write.csv(dat_all, 'FrogPandemic.csv')
 write.csv(dat_all2, 'FrogPandemic2.csv')
-
 ```
-
-
-3. power analysis
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -715,6 +671,7 @@ set.seed(54321)
 N = 10
 N = 40
 N = 100
+
 c1 <- rnorm(N, mean = 100, sd = 25)
 c2 <- rnorm(N, mean = 100, sd = 50)
 g1 <- rnorm(N, mean = 120, sd = 25)
@@ -762,7 +719,58 @@ plot(two.group.unpaired, color.column = Gender)
 
 
 
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 
+#### dplyr (20 min) (Ying):
+
+1. Import Data
+2. How to change data into what you want
+3. how to get rid of NA in your data
+4. how to make a new collumn in your data
+5. how to change the orientation and layout of your data (Hayden)
+6. double checking data sets for spelling mistakes
+7. piping and filtering/sort data
+8. creating new data frames
+9. how to make a small program (for loop, if statements, make your own functions) (Hayden to help)
+
+
+
+#### ggplot (20min) (Ying and Hayden):
+
+```{r}
+library(ggplot2)
+```
+
+
+1. qplot 
+
+```{r}
+#qplot(Species, Frog_Mort, Data1, geom = "auto")
+```
+
+2. plotting basic functions in ggplot using geoms
+    + boxplot plot: mortality vs species 
+    
+```{r}
+Species_Mort <- ggplot(Data1, aes(x=Year, y=Frog_Mort))+
+  geom_boxplot()
+Species_Mort
+
+
+```
+    
+3. adding trend lines 
+    + scatter plot + linear model: mortality vs traffic 
+4. adding multiple data sets to same graph
+5. anotate text and axises
+6. changin colour schemes and shapes
+    + fill color of different frog species, different locations
+7. change theme of a plot 
+8. plotting models 
+9. confidence intervals and standard error bars
+    + linear model: mortality vs traffic, mortality vs food supply in ontario 
+10. how to add multiple plots to one graph space
 
 
 

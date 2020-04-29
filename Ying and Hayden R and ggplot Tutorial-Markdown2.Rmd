@@ -60,12 +60,12 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 2. markdown vs script
 3. github links
 4. handling error messages 
-        (dependancies missing, unexpect ",", googling answers)
-5. how to google 101
-6. other helpful links (Ying)
+        (googling answers)
+
+5. other helpful links (Ying)
     + Quick-R: https://www.statmethods.net/index.html 
     + ggplot2: https://learnr.wordpress.com 
-7. packages
+6. packages
     + You need to install: pwr, ggplot2, dplyr, knitr, kableExtra, dabestr
 
 

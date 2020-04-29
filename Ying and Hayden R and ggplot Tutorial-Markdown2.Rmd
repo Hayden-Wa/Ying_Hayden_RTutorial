@@ -26,9 +26,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
 ```
 ## Preface
-In <font size="4" color="red">2020</font>, a pandemic caused by the  <font size="4" color="blue">COVID-19</font> virus hit human society harshly, with <font size="4" color="dark blue">million </font> people infected and <font size="4" color="dark blue">thousands of</font> people dead. As simple country <font size="4" color="orange">biologists</font>, we are staying home at the behest of Government of Canada, helping *Homo sapiens* maintain good  <font size="5" color="green">health</font> and congratulating <font size="5" color="green">nature</font> for a temporary break from human acitivties. 
+In <font size="4" color="red">2020</font>, a pandemic caused by the  <font size="4" color="blue">COVID-19</font> virus hit human society harshly, with <font size="4" color="dark blue">million </font> people infected and <font size="4" color="dark blue">thousands of</font> people dead. As simple country <font size="4" color="orange">biologists</font>, we are staying home at the behest of the Government of Canada, helping *Homo sapiens* maintain good  <font size="5" color="green">health</font> . While this disease is bad news for humans  <font size="5" color="green">nature</font> is getting a temporary break from human acitivties. 
 
-As the rock below reminds us <font size="5">**Don't give up!**</font>. We will continue our <font size="4" color="brown">academic</font> pursuits and brain-hearting <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decided today is the day, to actually do some <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
+As the rock below reminds us <font size="5">**Don't give up!**</font>. We will continue our <font size="4" color="brown">academic</font> pursuits and mentally taxing <font size="4" color="brown">science</font> work in Lougheed Lab at Queen's University. We decided today is the day, to actually do some <font size="4" color="blue">R</font> work. Follow **Hayden** and **Ying** and do today's **brain exercise**. We will go through:  
 
 
 - Section 1: R basics
@@ -39,7 +39,7 @@ As the rock below reminds us <font size="5">**Don't give up!**</font>. We will c
 
 We have a real <font size="4" color="orange">biological question</font> to be solved: 
 
-- Has frog mortality changed in current COVID-19 situation in Ontario compared to before?
+- Has frog mortality changed in current COVID-19 situation in Ontario compared to before the pandemic?
 
 Two <font size="4" color="orange">hypotheses</font> raised: 
 
@@ -71,14 +71,14 @@ Two <font size="4" color="orange">hypotheses</font> raised:
 ## Section 2: Data simulation
 1. how to generate a "fake" data set
 
-  -(Frog mortality, frog species (3), location (3), sampling year (2010-2020), Total number of cars)
+  -(Frog mortality, frog species (3), location (3), sampling year (2010-2020), Total number of cars per day)
   -generate date for each year separately, then can change number of cars for this year specifically, 
   -combine the data from different years into one data frame
   -start with 1 species and 1 location, add more in if you can later
   
 ```{r}
-# Ying's codes 
-# a pool to draw mean mortality rate and mean number of car per hour 
+
+# a pool to draw mean mortality rate and mean number of car per day 
 mor_mean_pool <- rnorm(n=10, mean=25, sd=1)
 car_mean_pool <- rnorm(n=10, mean=50, sd=1)
 # a dataset to store the data 
@@ -92,11 +92,10 @@ dat_all <- data.frame(frog_mort, car_num,year, location, species)
 loc_all <- c("Site A", "Site B", "Site C")
 
 
-loc_all <- c("Site A", "Site B", "Site C")
-
 
 for (j in 1:3){ # a loop to get location 
   loc <- loc_all[j]
+  
 for (i in seq(2010,2019,1)){ # generate the data for 2010 to 2019 (before pandemic)
   mean_mor <- sample(mor_mean_pool, 1) 
   mean_car <- sample(car_mean_pool, 1)
@@ -111,7 +110,7 @@ for (i in seq(2010,2019,1)){ # generate the data for 2010 to 2019 (before pandem
   dat <- data.frame(frog_mort, car_num) # small cars have small frog mortality 
   dat$year <- rep(i,3) # add year to the dataset 
   dat$location <- rep(loc,3) # add location to the dataset 
-  dat$species <- c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens") # add species to the dataset 
+  dat$species <- sample(c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens"),3,FALSE) # add species to the dataset 
   
   dat_all <- rbind(dat_all, dat)
   
@@ -135,7 +134,7 @@ for (j in 1:3){ # a loop to get location
   dat <- data.frame(frog_mort, car_num) # small cars have small frog mortality 
   dat$year <- rep(2020,3) # add year to the dataset 
   dat$location <- rep(loc,3) # add location to the dataset 
-  dat$species <- c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens") # add species to the dataset 
+  dat$species <- sample(c("Rana clamitans", "Pseudacris crucifer", "Lithobates pipiens"), 3, FALSE)# add species to the dataset 
   
   dat_all <- rbind(dat_all, dat)
   
@@ -145,8 +144,13 @@ print(c("2020", j))
 dat_all <- dat_all[-1,] # delete the first NA row. We can also use package dplyr to filter rows with NA. 
 ```
 
+Alternatively, We can make the data this way...
+
+
 ```{r}
+
 set.seed(911)
+
 N <- 90
 frog_mort <- rnorm(N, mean=26, sd=1)
 car_num <- rnorm(N, mean=50, sd=8)
@@ -753,9 +757,9 @@ library(ggplot2)
     + boxplot plot: mortality vs species 
     
 ```{r}
-Species_Mort <- ggplot(Data1, aes(x=Year, y=Frog_Mort))+
-  geom_boxplot()
-Species_Mort
+#Species_Mort <- ggplot(Data1, aes(x=Year, y=Frog_Mort))+
+  #geom_boxplot()
+#Species_Mort
 
 
 ```

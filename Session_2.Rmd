@@ -1,0 +1,134 @@
+---
+title: "Ying and Hayden's R tutorial - 2"
+author: "Ying Chen and Hayden Wainwright, Lougheed Lab, Queen's University"
+date: "05/06/2020"
+output: html_document
+---
+
+<style type="text/css">
+h1.title {
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+h4.author { /* Header 4 - and the author and data headers use this too  */
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+}
+</style>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+## Preface
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+## Section 4. Estimation Statistics 
+
+
+<font size="2" color="red"> *The following materials are prepared by Ying upon her understanding, which means they can be flawed.* </font> 
+
+<font size="2" color="red"> *Ying highly recommends you to read authoritative books and papers for learning. Here are some:* </font> 
+
+- <font size="2" color="gray">*Rothman, K. J. 1978. A show of confidence. New England Journal of Medicine 299(24): 1362-1363.*</font>
+- <font size="2" color="gray">*Gardner, M. J., and D. G. Altman. 1986. British Medical Journal 292(6522): 746-750.*</font>
+- <font size="2" color="gray">*Coe, R. 2002. It's the effect size, stupid! What effect size is and why it is important. Annual Conference of the British Educational Research Association; University of Exeter, England.*</font>
+- <font size="2" color="gray">*Sullivan, G. M., and R. Feinn. 2012. Using effect size — or why the p value is not enough. Journal of Graduate Medical Education 4(3): 279-282*</font>
+- <font size="2" color="gray"> *Wasserstein, R. L., A. L. Schirm, and N. A. Lazar. 2019. Moving to a world beyond “p < 0.05”. The American Statistician, 73:1-19.*</font>
+- <font size="2" color="gray"> *Halsey, L. G. 2019. The reign of the p-value is wver: What alternative analyses could we employ to fill the power vacuum? Biology Letters 15: 20190174*</font>
+- <font size="2" color="gray"> *Amrhein, V., S. Greenland, and B. Mcshane. 2019. Retire statistical significance. Nature 567:305-307.*</font>
+
+
+Problems of p-value and statistically significance:
+
+- Dichotomy is not informative of the observed data, and can be misleading.  
+- 
+
+
+Alternatives:
+
+- Bayesian analysis 
+- 
+
+
+
+**Package dabestr** 
+
+- Website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
+- Official release on CRAN: https://cran.r-project.org/web/packages/dabestr/index.html 
+- Github link: https://github.com/ACCLAB/dabestr 
+
+```{r}
+# Estimation stats: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
+# Codes are from https://cran.r-project.org/web/packages/dabestr/vignettes/using-dabestr.html 
+library(dplyr)
+
+set.seed(54321)
+
+N = 10
+N = 40
+N = 100
+
+c1 <- rnorm(N, mean = 100, sd = 25)
+c2 <- rnorm(N, mean = 100, sd = 50)
+g1 <- rnorm(N, mean = 120, sd = 25)
+g2 <- rnorm(N, mean = 80, sd = 50)
+g3 <- rnorm(N, mean = 100, sd = 12)
+g4 <- rnorm(N, mean = 100, sd = 50)
+gender <- c(rep('Male', N/2), rep('Female', N/2))
+dummy <- rep("Dummy", N)
+id <- 1: N
+
+wide.data <- 
+  tibble::tibble(
+    Control1 = c1, Control2 = c2,
+    Group1 = g1, Group2 = g2, Group3 = g3, Group4 = g4,
+    Dummy = dummy,
+    Gender = gender, ID = id)
+
+
+my.data   <- 
+  wide.data %>%
+  tidyr::gather(key = Group, value = Measurement, -ID, -Gender, -Dummy)
+
+
+library(dabestr)
+
+two.group.unpaired <- 
+  my.data %>%
+  dabest(Group, Measurement, 
+         # The idx below passes "Control" as the control group, 
+         # and "Group1" as the test group. The mean difference
+         # will be computed as mean(Group1) - mean(Control1).
+         idx = c("Control1", "Group1"), 
+         paired = FALSE)
+
+two.group.unpaired 
+
+plot(two.group.unpaired, color.column = Gender)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

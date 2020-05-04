@@ -28,7 +28,7 @@ library(knitr)
 
 Welcome back my friends! 
 
-As another rock says <font size="5">**Smile!**</font>. 
+This week's rocking message is <font size="5">**Smile!**</font>. 
 
 We are glad you have lived through our first 3 sections (if not, [here is the material](https://htmlpreview.github.io/?https://github.com/YingChen94/BnR_Hayden_Ying_R_Session/blob/master/R_Hayden_Ying_20200429.html))! 
 
@@ -145,6 +145,165 @@ plot(two.group.unpaired, color.column = Gender)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+
+## Section 5. Data Visualization
+
+There are a few different options for making plots in R. The two most common are the base graphics and ggplot. 
+ggplot is what we will be focusing on today as it allows for easier and more fine-tuned adjustments to plots.
+The basic philosphy behind ggplot is that each graph is created from a series of layers where are put together following logical rules, much like words in a sentence. This is where the name comes from, "Gramar Graphics". Today we will focus on a few major aspects of ggplot. The first is how to get a basic plot, we then move on to how to customize the colours and themes of the plot before moving on to cover how to include multiple plots in one graphic and how to save the graphics for use in a paper, document, or report. 
+
+
+ggplot Concepts Covered:
+
+- Basic Plots.
+- Customizing graphs. 
+- Making figures from multiple graphs.
+- Exporting figures. 
+
+To start, we will build a basic plot of our data from last week. 
+
+```{r}
+dat <- read.csv("FrogPandemic.csv")
+dat
+
+
+#lets start with a simple graph of mortality for each species
+SpeciesMort <- ggplot(data  = dat) +
+  geom_point(mapping = aes(x = species, y = frog_mort))
+SpeciesMort
+
+#Lets see what this would look like with two continious variables
+CarsMort <- ggplot(data = dat)+
+  geom_point(mapping = aes(x = car_num, y = frog_mort))
+CarsMort
+
+#lets add years to this graph, this should sort our points by year but display the same trends as before
+#a legend will also be generating
+CarsMort <- ggplot(data = dat)+
+  geom_point(mapping = aes(x = car_num, y = frog_mort, colour = year))
+CarsMort
+
+CarsMort <- ggplot(data = dat)+
+  geom_point(mapping = aes(x = car_num, y = frog_mort, size = year))
+CarsMort
+
+# we can also have multiple legends on one graph
+CarsMort <- ggplot(data = dat)+
+  geom_point(mapping = aes(x = car_num, y = frog_mort, size = year, shape = species))
+CarsMort
+
+# we can also assign colour and size to all points as a more global option
+CarsMort <- ggplot(data = dat)+
+  geom_point(mapping = aes(x = car_num, y = frog_mort, size = year), colour = "blue", size = 4)
+CarsMort
+
+
+```
+
+That is all fine and nice but what about if we want to add trend lines or other factors to the graph?
+For this we need to add in another piece of gramar to our sentence. This means we need to start exploring other geoms
+
+```{r}
+# Lets add lines to our graph of CarMort illistrating different species
+
+CarsMort <- ggplot(dat, aes(car_num,frog_mort))+
+  geom_point(mapping = aes(x = car_num, y = frog_mort))+
+  geom_line(aes (color = species))
+CarsMort
+
+#or if we want more of a summary line we can use the smooth line geom
+
+CarsMort <- ggplot(dat, aes(car_num,frog_mort))+
+  geom_point(mapping = aes(x = car_num, y = frog_mort))+
+  geom_smooth(aes (color = species))
+CarsMort
+
+# again we have the option here to move the colour to the more global position of the initial aes argument
+CarsMort <- ggplot(dat, aes(car_num,frog_mort, color = species))+
+  geom_point()+
+  geom_smooth()
+CarsMort
+# this made the points and the lines the same colour
+
+
+# lets try this again with year instead of number of cars and see if the story the graph tells is more compelling
+YearMort<- ggplot(dat, aes(year,frog_mort, color = species))+
+  geom_point()+
+  geom_smooth()
+YearMort
+
+#lets clean up this plot a bit then and make it a bit easier to read
+YearMort<- ggplot(dat, aes(year,frog_mort, colour = species), size = 4)+
+  geom_point()+
+  geom_smooth()+
+  scale_y_continuous(breaks = seq(10, 30, 5), name = "Frog Mortality (%)") +
+  scale_x_continuous(limits = c(2010,2020), breaks = seq(2010, 2020, 2), name = "Year") +
+  scale_colour_manual(labels = c("Lithobates pipiens", "Pseudaceis crucifer", "Rana clamitans"), values = c("orange", "royalblue", "darkgreen"), name = "Species")
+YearMort
+
+#alright we seem to be able to handle the point and lines geoms but what about other types of graphs?
+# well there are a lot of other geoms we could explore, here is a list of commonly used ones:
+geom_bar()
+geom_histogram()
+geom_boxplot()
+geom_errorbar()
+geom_density()
+geom_freqpoly()
+
+
+#lets make a box plot of our mortality for each species to see if there is an interesting story there
+
+BoxSpeciesMort <- ggplot(dat, aes(species, frog_mort, colour = species))+
+  geom_boxplot()
+BoxSpeciesMort
+
+# we can stylize this in the same way we did our previous line graph to correct our legend and change our colours
+BoxSpeciesMort <- ggplot(dat, aes(species, frog_mort, colour = species))+
+  geom_boxplot()+
+  scale_y_continuous(breaks = seq(10, 30, 5), name = "Frog Mortality (%)") +
+  xlab("Species")+
+  scale_colour_manual(labels = c("Lithobates pipiens", "Pseudaceis crucifer", "Rana clamitans"), values = c("orange", "royalblue", "darkgreen"), name = "Species")
+BoxSpeciesMort
+
+
+```
+
+Alrighty then, we got some basic graphing skills under our belt. Let us now see if we can build some more complicated graphs that might show some aspects of our data that we need to calculate first. To this end, lets make the following graphs
+
+Graphs to be made:
+
+- Histogram of frog mortality with normal distribution fitted to it. 
+- Bar plots with frog mortality borken down by year.
+- Bar plot showing mortality in 2020 and averaged data from  2019-2010 with appropriate error bars
+- Box plot of mortality in 2020 and averaged data from 2019-2010
+
+
+
+```{r}
+
+```
+
+
+
+To finish this all off lets make some figures that combine these separate plots into a single figure that is potentially publication worthy!
+
+```{r}
+
+```
 
 
 

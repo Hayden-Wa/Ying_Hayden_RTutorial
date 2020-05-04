@@ -272,8 +272,6 @@ BoxSpeciesMort <- ggplot(dat, aes(species, frog_mort, colour = species))+
 BoxSpeciesMort
 
 # we can stylize this in the same way we did our previous line graph to correct our legend and change our colours
-
-
 BoxSpeciesMort <- ggplot(dat, aes(species, frog_mort, colour = species))+
   geom_boxplot()+
   scale_y_continuous(breaks = seq(10, 30, 5), name = "Frog Mortality (%)") +
@@ -283,6 +281,35 @@ BoxSpeciesMort
 
 
 ```
+
+Alrighty then, we got some basic graphing skills under our belt. Let us now see if we can build some more complicated graphs that might show some aspects of our data that we need to calculate first. To this end, lets make the following graphs
+
+Graphs to be made:
+
+- Histogram of frog mortality with normal distribution fitted to it. 
+- Bar plots with frog mortality borken down by year.
+- Bar plot showing mortality in 2020 and averaged data from  2019-2010 with appropriate error bars
+- Box plot of mortality in 2020 and averaged data from 2019-2010
+
+
+
+```{r}
+
+```
+
+
+
+To finish this all off lets make some figures that combine these separate plots into a single figure that is potentially publication worthy!
+
+```{r}
+
+```
+
+
+
+
+
+
 
 
 

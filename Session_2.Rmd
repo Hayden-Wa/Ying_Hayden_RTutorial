@@ -26,9 +26,24 @@ library(knitr)
 
 ## Preface
 
+Welcome back my friends! 
 
+As another rock says <font size="5">**Smile!**</font>. 
 
+We are glad you have lived through our first 3 sections (if not, [here is the material](https://htmlpreview.github.io/?https://github.com/YingChen94/BnR_Hayden_Ying_R_Session/blob/master/R_Hayden_Ying_20200429.html))! 
 
+- Section 1: R basics
+- Section 2: Data simulation
+- Section 3: Power analysis
+
+We will continue with the following section 4 and 5 today! 
+
+- Section 4: Estimation statistics
+- Section 5: Data visulization 
+
+<font size="4" color="blue">R</font>eady?
+
+![<font size="4" color="gray">*You are my rock! Love from Lougheed Lab. Photo by Ying Chen.*</font>](IMG_6208.JPG)
 
 
 
@@ -52,7 +67,7 @@ library(knitr)
 
 Problems of p-value and statistically significance:
 
-- Dichotomy is not informative of the observed data, and can be misleading.  
+- Dichotomy is not informative of the observed data (e.g. size of the difference between the groups), and can be misleading.  
 - 
 
 
@@ -60,6 +75,13 @@ Alternatives:
 
 - Bayesian analysis 
 - 
+
+
+
+Important concepts:
+
+- Standard deviation: an descriptive index. 
+- Standard error: an estimative index. 
 
 
 

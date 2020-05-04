@@ -28,7 +28,7 @@ library(knitr)
 
 Welcome back my friends! 
 
-As another rock says <font size="5">**Smile!**</font>. 
+This week's rocking message is <font size="5">**Smile!**</font>. 
 
 We are glad you have lived through our first 3 sections (if not, [here is the material](https://htmlpreview.github.io/?https://github.com/YingChen94/BnR_Hayden_Ying_R_Session/blob/master/R_Hayden_Ying_20200429.html))! 
 
@@ -153,4 +153,12 @@ plot(two.group.unpaired, color.column = Gender)
 
 
 
+
+
+
+
+
+<p>&nbsp;</p>
+
+## Section 5. Data Visualization
 

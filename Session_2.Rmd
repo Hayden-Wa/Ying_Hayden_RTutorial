@@ -30,7 +30,7 @@ Welcome back my friends!
 
 This week's rocking message is <font size="5">**Smile!**</font>. 
 
-We are glad you have lived through our [first 3 sections](https://htmlpreview.github.io/?https://github.com/YingChen94/BnR_Hayden_Ying_R_Session/blob/master/R_Hayden_Ying_20200429.html))! 
+We are glad you have lived through our first 3 sections (if not, [here is the material](https://htmlpreview.github.io/?https://github.com/YingChen94/BnR_Hayden_Ying_R_Session/blob/master/R_Hayden_Ying_20200429.html))! 
 
 - Section 1: R basics
 - Section 2: Data simulation
@@ -65,41 +65,43 @@ We will continue with the following section 4 and 5 today!
 - <font size="2" color="gray"> *Amrhein, V., S. Greenland, and B. Mcshane. 2019. Retire statistical significance. Nature 567:305-307.*</font>
 
 
-<p>&nbsp;</p>
-#### 4.1 Alternatives to p-value
-
 Problems of p-value and statistically significance:
 
-- Not informative of the data. 
-    + P-value is just the likelihood that the null hypothesis is true. 
-- Dichotomy can be misleading. 
-    + There is "no difference" because the p-value is "over 0.05".
-    + One study is "statistically significant" while the other is "not statistically significant". 
-    ![<font size="4" color="gray">*Screenshot from Amrhein et al. 2019.*</font>](IMG306.png){width=800px}
+- Dichotomy is not informative of the observed data (e.g. size of the difference between the groups), and can be misleading.  
+- 
 
 
-<p>&nbsp;</p>
-**Alternatives (Halsey 2019)**:
+Alternatives:
 
-- **Bayes factor**: the ratio of the likelihood of one particular hypothesis to the likelihood of another.
-    + For example, a Bayes factor of 5 indicates that the strength of evidence is five times greater for the alternative hypothesis than the null hypothesis; a Bayes factor of 1/5 indicates the reverse.
-- **Akaike information criterion**: 
-    + Relative test of model quality
-- **Estimation statistics**: effect size + confidence interval 
-    + Effect size: how strong is the effect?
-    + Confidence interval: how accurate is that value as an estimate of how strong the population effect is
-    + One exmple from *Gardner, M. J., and D. G. Altman. 1986. British Medical Journal 292(6522): 746-750.*
-    + ![<font size="4" color="gray">*Screenshot from Gardner and Altman 1986.*</font>](IMG305.png){width=600px}
-    + Another example made in R. 
-```{r, echo=FALSE,message=FALSE,warning=FALSE}
+- Bayesian analysis 
+- 
+
+
+
+Important concepts:
+
+- Standard deviation: an descriptive index. 
+- Standard error: an estimative index. 
+
+
+
+**Package dabestr** 
+
+- Website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
+- Official release on CRAN: https://cran.r-project.org/web/packages/dabestr/index.html 
+- Github link: https://github.com/ACCLAB/dabestr 
+
+```{r}
 # Estimation stats: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
 # Codes are from https://cran.r-project.org/web/packages/dabestr/vignettes/using-dabestr.html 
 library(dplyr)
-library(ggplot2)
+
 set.seed(54321)
+
 N = 10
 N = 40
 N = 100
+
 c1 <- rnorm(N, mean = 100, sd = 25)
 c2 <- rnorm(N, mean = 100, sd = 50)
 g1 <- rnorm(N, mean = 120, sd = 25)
@@ -109,16 +111,22 @@ g4 <- rnorm(N, mean = 100, sd = 50)
 gender <- c(rep('Male', N/2), rep('Female', N/2))
 dummy <- rep("Dummy", N)
 id <- 1: N
+
 wide.data <- 
   tibble::tibble(
     Control1 = c1, Control2 = c2,
     Group1 = g1, Group2 = g2, Group3 = g3, Group4 = g4,
     Dummy = dummy,
     Gender = gender, ID = id)
+
+
 my.data   <- 
   wide.data %>%
   tidyr::gather(key = Group, value = Measurement, -ID, -Gender, -Dummy)
+
+
 library(dabestr)
+
 two.group.unpaired <- 
   my.data %>%
   dabest(Group, Measurement, 
@@ -127,67 +135,18 @@ two.group.unpaired <-
          # will be computed as mean(Group1) - mean(Control1).
          idx = c("Control1", "Group1"), 
          paired = FALSE)
+
+two.group.unpaired 
+
 plot(two.group.unpaired, color.column = Gender)
-```
-
-
-
-<p>&nbsp;</p>
-#### 4.2 Effect size
-
-It is generally used in **meta-analysis** (for combining and comparing estimates from different studies). 
-
-**Manual coding**
-
-Go find the equation. 
-
-For examle, the most simple one is the standardised mean difference between the two
-groups. 
-
-Effect size = $\frac{\bar{x_A}-\bar{x_B}}{\sigma}$. Simply use the function `mean()` `sd()`. 
-
-**Package meta & esc**
-
-
-
-```{r}
-library(meta)
-library(esc)
-
 
 ```
 
 
-<p>&nbsp;</p>
-#### 4.3 Confidence interval - Bootstrapping 
-
-Important concepts:
-
-- Standard deviation: an descriptive index. 
-- Standard error: an estimative index. 
 
 
-<p>&nbsp;</p>
-#### 4.4 **Package dabestr** 
 
-- Website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
-- Official release on CRAN: https://cran.r-project.org/web/packages/dabestr/index.html 
-- Github link: https://github.com/ACCLAB/dabestr 
 
-```{r}
-# read our dataset 
-dat <- read.csv("FrogPandemic.csv", header=T)
-dat <- dat[,-1]
-
-library(dabestr)
-shared.control <- 
-  dat %>%
-  dabest(year, frog_mort, 
-         idx = c("2010", "2011", "2012","2013","2014","2015","2016","2017","2018","2019","2020"),
-         paired = FALSE)
-
-plot(shared.control, color.column = species, rawplot.type = "swarmplot")
-```
 
 
 
@@ -218,7 +177,8 @@ ggplot Concepts Covered:
 To start, we will build a basic plot of our data from last week. 
 
 ```{r}
-dat <- read.csv("FrogPandemic.csv")
+dat <- read.csv("FrogPandemic_10loc.csv")
+library(ggplot2)
 dat
 
 
@@ -335,6 +295,12 @@ Graphs to be made:
 
 
 ```{r}
+
+ggplot(data = mpg) +
+  geom_histogram(aes(x = hwy, y = ..density..), binwidth = 5) +
+  xlim(0, 50) +
+  stat_function(fun = dnorm, args = list(mean = mean(mpg$hwy), sd = sd(mpg$hwy)), colour = "red", lwd = 1)
+
 
 ```
 

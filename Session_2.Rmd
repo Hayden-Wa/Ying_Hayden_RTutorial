@@ -647,7 +647,7 @@ To finish this all off lets make some figures that combine these separate plots 
 
 
 ```{r}
-install.packages("patchwork")
+#install.packages("patchwork")
 
 library(patchwork)
 

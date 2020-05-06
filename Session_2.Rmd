@@ -213,6 +213,29 @@ CarsMort <- ggplot(data = dat)+
 CarsMort
 
 
+# We can also change the appearance of the background of our graphs by changing the theme
+
+CarsMort + theme_bw()
+CarsMort + theme_classic()
+
+# or we can write our own theme
+
+mytheme <- theme(
+  axis.ticks = element_line(size=0.5, colour="black"),
+  axis.text.x = element_text(size=14, colour="black"),
+  axis.title.x = element_text(size=20, colour="black", vjust=-0.1),
+  axis.title.y = element_text(size=20, colour="black", vjust=+0.35),
+  panel.background = element_rect(fill="white", colour="black"),
+  panel.border = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  legend.position = "top",
+  legend.title = element_text(face="italic", size=16),
+  legend.text = element_text(size = 16)
+)
+
+CarsMort + mytheme
+
 ```
 
 That is all fine and nice but what about if we want to add trend lines or other factors to the graph?
@@ -290,29 +313,189 @@ Graphs to be made:
 - Histogram of frog mortality with normal distribution fitted to it. 
 - Bar plots with frog mortality borken down by year.
 - Bar plot showing mortality in 2020 and averaged data from  2019-2010 with appropriate error bars
-- Box plot of mortality in 2020 and averaged data from 2019-2010
+
 
 
 
 ```{r}
+#this will generate a quick histogram of your data
+HistMort <- ggplot(data = dat) +
+  geom_histogram(aes(frog_mort)) 
+HistMort  
 
-ggplot(data = mpg) +
-  geom_histogram(aes(x = hwy, y = ..density..), binwidth = 5) +
-  xlim(0, 50) +
-  stat_function(fun = dnorm, args = list(mean = mean(mpg$hwy), sd = sd(mpg$hwy)), colour = "red", lwd = 1)
+#Here are some other summary plots similar to histograms
+FreployMort <- ggplot(data = dat, aes(frog_mort))+
+  geom_freqpoly()
+FreployMort
+
+DenMort <- ggplot(data = dat, aes(frog_mort))+
+  geom_density()
+DenMort
+
+# We may now want to adjust this so it reflects a picture we want, we can change the bin width, and limits to help with this
+HistMort <- ggplot(data = dat)+
+  geom_histogram(aes(x = frog_mort, y = ..density..), binwidth = 0.5)+
+  xlim(0, 30) +
+  stat_function(fun = dnorm, args = list(mean = mean(dat$frog_mort), sd = sd(dat$frog_mort)), colour = "red", lwd = 1)
+HistMort
+
+#fixing the missing variable
+HistMort <- ggplot(data = dat)+
+  geom_histogram(aes(x = frog_mort, y = ..density..), binwidth = 0.5)+
+  coord_cartesian(xlim=c(10,30)) +
+  stat_function(fun = dnorm, args = list(mean = mean(dat$frog_mort), sd = sd(dat$frog_mort)), colour = "red", lwd = 1)+
+  xlab("Frog Mortality")+
+  ylab("Density")
+HistMort
+
+```
+
+Alright, now that we have our histogram, lets see about making a our bar plots
+
+```{r}
+
+# we can also make a plot of the mortality for each species
+ggplot(dat) +
+  geom_bar(aes(x = location, fill = species), stat = "count", position = "fill")
+
+
+#ets make a bar plot with frog mortality for all years
+
+BarMortAllYears <- ggplot(data = dat, aes(x = year, y = frog_mort))+
+  geom_bar(stat = "identity")
+BarMortAllYears
+
+#this is not the plot we want, we need to tell R to take the average of frog_mort for each year
+
+library(dplyr)
+class(dat$year)
+dat$year <- as.factor(dat$year)
+
+avgMort <- dat %>% group_by(year) %>% summarise(mean_Mort = mean(frog_mort), sd_Mort = sd(frog_mort))
+
+AvgMortAllYear <- ggplot(avgMort, aes(x = year, y = mean_Mort)) +
+  geom_bar(stat = "identity")
+AvgMortAllYear
+
+# Can we put error bars showing the SD of these categories
+AvgMortAllYear <- ggplot(avgMort, aes(x = year, y = mean_Mort)) +
+  geom_bar(stat = "identity", fill = "grey") + 
+  geom_errorbar(aes(ymin = mean_Mort - sd_Mort, ymax = mean_Mort + sd_Mort), width = 0.2)
+AvgMortAllYear
+
+# we can also make a plot of the mortality for each species
+ggplot(dat) +
+  geom_bar(aes(x = location, fill = species), stat = "count", position = "fill")
+
+
+
 
 
 ```
 
+
+```{r}
+# How about making a plot that is just pre and during the pandemic?
+# to do this we need to subset our data
+```
+
+
+
+
+```{r}
+PreMort <- avgMort %>%
+  filter(year == c("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"))%>%
+  summarise(mean_Mort2 = mean(mean_Mort), sd_Mort = sd(mean_Mort))
+PreMort$year <- ("Pre-pandemic")
+PreMort
+
+PostMort <- avgMort %>%
+  filter(year =="2020")%>%
+  summarise(mean_Mort2 = mean(mean_Mort), sd_Mort = sd_Mort)
+PostMort$year <- ("During Pademic")
+PostMort
+
+#combine the two data sets into a new data frame
+Pan_Sumarry <- rbind(PreMort, PostMort)
+Pan_Sumarry
+
+#Now we make the graph
+AvgMort <- ggplot(Pan_Sumarry, aes(x = year, y = mean_Mort2)) +
+  geom_bar(stat = "identity", fill = "grey") + 
+  geom_errorbar(aes(ymin = mean_Mort2 - sd_Mort, ymax = mean_Mort2 + sd_Mort), width = 0.2)+
+  xlab("")+
+  ylab("Mean Frog Mortality (%)")+
+  theme_classic()
+AvgMort
+
+
+
+```
+
+There are also a number of better ways to show the differences in frog mortality over the years. Some examples in clude using dot plots, as well as violin plots. Code for making those are outlined below. 
+
+
+```{r}
+PointYearMort <- ggplot(dat, aes(x = year, y = frog_mort)) +
+  geom_point()
+PointYearMort
+
+JitterYearMort <- ggplot(dat, aes(x = year, y = frog_mort)) +
+  geom_jitter()
+JitterYearMort
+
+JitterYearMort <- ggplot(dat, aes(x = year, y = frog_mort)) +
+  geom_jitter(aes(colour = location))
+JitterYearMort
+
+vpYearMort <- ggplot(dat, aes(x=year, y=frog_mort)) +
+  geom_violin() +
+  geom_boxplot(width=0.1) +
+  theme(
+    #axis.text.y = element_blank(),
+    axis.title = element_blank())
+vpYearMort
+
+
+```
 
 
 To finish this all off lets make some figures that combine these separate plots into a single figure that is potentially publication worthy!
 
+
 ```{r}
+install.packages("patchwork")
+
+library(patchwork)
+
+#follow is a list of graphs we have made
+vpYearMort
+HistMort
+BoxSpeciesMort
+YearMort
+AvgMort
+CarsMort
+
+
+vpYearMort / (HistMort | BoxSpeciesMort)
+
+
+#alternatively we can use grid.arrange function
+library(gridExtra)
+FinalGraphic <- grid.arrange(vpYearMort, HistMort, CarsMort, AvgMort, ncol = 2, layout_matrix = cbind(c(1,1,1), c(2,3,4)), bottom = "Bottom", left = "Side")
+
+
+
+#now to save the figure as a png or pdf
+
+#if you arent using github you can set a working directory where you want the figure to end up
+
+#setwd("~/Desktop")
+
+ggsave("FinalFigure.png", plot = FinalGraphic)
+ggsave("FinalFigure.pdf", plot = FinalGraphic)
 
 ```
-
-
 
 
 

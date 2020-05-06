@@ -147,6 +147,7 @@ plot(multi.two.group.unpaired, color.column = Gender)
 ```{r, message=FALSE,warning=FALSE}
 # load two datasets 
 dat <- read.csv("FrogPandemic.csv")
+dat <- dat[-1,]
 dat_10loc <- read.csv("FrogPandemic_10loc.csv")
 ```
 
@@ -297,15 +298,29 @@ shared.control_10loc
 
 Unfortunately, no plot is available in dabestr for regression analysis. But we can still bootstrap the regression coeficient. 
 
-Recall we want to have a look at the 
+Null hypothesis: frog mortality does not correlate with number of cars on the road in Ontario (r=0). 
 
 ```{r}
+# step 1. Caculate regression coefficient r 
+mymod <- lm(frog_mort ~ car_num, dat) # linear model 
+(sum_mymod <- summary(mymod)) 
+(r0 <- sum_mymod$coefficients[2]) # extract correlation coefficient 
+# step 2. Boostrap 
+boot_r_all <- NA
+for (i in 1:5000){
+  car_each_boot <- sample(dat$car_num, length(dat$car_num),replace = T)
+  mort_each_boot <- sample(dat$frog_mort, length(dat$frog_mort),replace = T)
+  r <- summary(lm(mort_each_boot~car_each_boot))$coefficients[2]
+  boot_r_all[i] <- r
+}
 
+hist(boot_r_all,xlim = c(-0.5,0.5))
+abline(v=r0,col="red")
 ```
 
 
 
-#### 4.4 Other R packages 
+#### 4.3 Other R packages 
 
 **"itns"**
 

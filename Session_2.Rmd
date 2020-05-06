@@ -334,13 +334,6 @@ abline(v=r0,col="red")
 
 
 
-
-
-
-
-
-
-
 <p>&nbsp;</p>
 
 ## Section 5. Data Visualization
@@ -360,8 +353,12 @@ ggplot Concepts Covered:
 To start, we will build a basic plot of our data from last week. 
 
 ```{r}
-dat <- read.csv("FrogPandemic_10loc.csv")
+
 library(ggplot2)
+
+
+dat <- read.csv("FrogPandemic_10loc.csv")
+
 dat
 
 
@@ -438,6 +435,8 @@ CarsMort <- ggplot(dat, aes(car_num,frog_mort))+
   geom_point(mapping = aes(x = car_num, y = frog_mort))+
   geom_smooth(aes (color = species))
 CarsMort
+
+?geom_smooth()
 
 # again we have the option here to move the colour to the more global position of the initial aes argument
 CarsMort <- ggplot(dat, aes(car_num,frog_mort, color = species))+
@@ -555,6 +554,7 @@ class(dat$year)
 dat$year <- as.factor(dat$year)
 
 avgMort <- dat %>% group_by(year) %>% summarise(mean_Mort = mean(frog_mort), sd_Mort = sd(frog_mort))
+avgMort
 
 AvgMortAllYear <- ggplot(avgMort, aes(x = year, y = mean_Mort)) +
   geom_bar(stat = "identity")
@@ -565,11 +565,6 @@ AvgMortAllYear <- ggplot(avgMort, aes(x = year, y = mean_Mort)) +
   geom_bar(stat = "identity", fill = "grey") + 
   geom_errorbar(aes(ymin = mean_Mort - sd_Mort, ymax = mean_Mort + sd_Mort), width = 0.2)
 AvgMortAllYear
-
-# we can also make a plot of the mortality for each species
-ggplot(dat) +
-  geom_bar(aes(x = location, fill = species), stat = "count", position = "fill")
-
 
 
 

@@ -486,6 +486,10 @@ BoxSpeciesMort <- ggplot(dat, aes(species, frog_mort, colour = species))+
 BoxSpeciesMort
 
 
+Box2 <- ggplot(dat, aes(x=year, y=frog_mort))+
+  geom_boxplot(aes(col=species))
+Box2
+
 ```
 
 Alrighty then, we got some basic graphing skills under our belt. Let us now see if we can build some more complicated graphs that might show some aspects of our data that we need to calculate first. To this end, lets make the following graphs
@@ -653,6 +657,7 @@ BoxSpeciesMort
 YearMort
 AvgMort
 CarsMort
+Box2
 
 
 vpYearMort / (HistMort | BoxSpeciesMort)

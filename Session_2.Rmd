@@ -83,8 +83,8 @@ Problems of p-value and statistically significance:
     + P-value is just the likelihood that the null hypothesis is true. 
 - Dichotomy can be misleading. 
     + There is "no difference" because the p-value is "over 0.05".
-    + One study is "statistically significant" while the other is "not statistically significant". 
-    ![<font size="4" color="gray">*Screenshot from Amrhein et al. 2019.*</font>](IMG306.png){width=800px}
+    + One study is "statistically significant" while the other is "not statistically significant". See this graph from Amrhein et al. 2019:
+    ![](IMG306.png)
 
 
 
@@ -94,7 +94,7 @@ Problems of p-value and statistically significance:
 - **Bayes factor**: the ratio of the likelihood of one particular hypothesis to the likelihood of another.
     + For example, a Bayes factor of 5 indicates that the strength of evidence is five times greater for the alternative hypothesis than the null hypothesis; a Bayes factor of 1/5 indicates the reverse.
 - **Akaike information criterion**: 
-    + Relative test of model quality. Use `AIC()`
+    + Relative test of model quality. Use `AIC(mod1, mod2)`
 - **Estimation statistics**: Data visualization with effect size + confidence interval 
     + Effect size: how strong is the effect?
     + Confidence interval: how accurate is that value as an estimate of how strong the population effect is
@@ -144,8 +144,11 @@ plot(multi.two.group.unpaired, color.column = Gender)
 ```{r, message=FALSE,warning=FALSE}
 # load two datasets 
 dat <- read.csv("FrogPandemic.csv")
+head(dat)
 dat <- dat[-1,]
+head(dat)
 dat_10loc <- read.csv("FrogPandemic_10loc.csv")
+head(dat_10loc)
 ```
 
 <p>&nbsp;</p>
@@ -153,7 +156,7 @@ dat_10loc <- read.csv("FrogPandemic_10loc.csv")
 
 Recall our null hypothesis: the mean frog mortality in Ontario in 2019 and 2020 is the same.
 
-If we do statistical t-test (Remember to check assumptions!! We skip it here...): 
+If we do statistical t-test (**Remember to check assumptions!!** We skip it here...): 
 
 ```{r}
 t.test(dat$frog_mort[which(dat$year==2019)],dat$frog_mort[which(dat$year==2020)],paired=TRUE,alternative = "two.sided")
@@ -172,6 +175,9 @@ Note the confidence interval for the t-test here is calculated by $\bar{x}_{diff
 (conf_left <- x_diff + t_left*sd_diff/sqrt(9))
 (conf_right <- x_diff + t_right*sd_diff/sqrt(9))
 ```
+
+So the confidence interval here is calculated based on the t distribution. 
+
 
 <p>&nbsp;</p>
 If we use estimation plots using R package "dabestr":
@@ -196,6 +202,8 @@ dat$ID[which(dat$location=="Site B" & dat$species=="Lithobates pipiens")] <- 6
 dat$ID[which(dat$location=="Site C" & dat$species=="Rana clamitans")] <- 7
 dat$ID[which(dat$location=="Site C" & dat$species=="Pseudacris crucifer")] <- 8
 dat$ID[which(dat$location=="Site C" & dat$species=="Lithobates pipiens")] <- 9
+
+head(dat)
 
 two.group.paired <- 
   dat %>%
@@ -263,7 +271,19 @@ plot(two.group.paired, color.column = species, rawplot.ylabel = "Frog mortality"
 
 
 <p>&nbsp;</p>
-**Example 2. ANOVA for factors with Ordered Levels** 
+**Example 2. ANOVA** 
+
+Recall our <font size="3" color="cornflowerBlue">*Challenge time!*</font>
+
+*In reality, one would expect frog mortality is affected by many factors, such as predation and climate. Thus one would expect the mean mortality rate changes across years. That is to say, with or without the pandemic frog mortality rate might change in 2020 as an usual pattern. We are interested in whether frog mortality change unusually in 2020 compared to the past 10 years and if so, whether it is because of the pandemic lockdown. *<font color="cornflowerBlue">*We raised a hypothesis that frog mortality rate change in 2020 deviates from the changing pattern in the past 10 years.* </font>
+
+*1. Do you think this is a good hypothesis?*
+
+*2. What is the statistical test? No package availble for it?!*
+
+<font color="violet">*3. Alternatives?*</font>
+
+Let's use estimation plots. 
 
 ```{r, message=FALSE,warning=FALSE}
 shared.control <- 
@@ -293,14 +313,14 @@ shared.control_10loc
 
 
 <p>&nbsp;</p>
-**Example 3. Confidence interval for regression** 
+**Example 3. Confidence interval for correlation** 
 
-Unfortunately, no plot is available in dabestr for regression analysis. But we can still bootstrap the regression coeficient. 
+Unfortunately, no plot is available in dabestr for correlation analysis. But we can still bootstrap the correlation coeficient. 
 
 Null hypothesis: frog mortality does not correlate with number of cars on the road in Ontario (r=0). 
 
 ```{r}
-# step 1. Caculate regression coefficient r 
+# step 1. Caculate correlation coefficient r 
 mymod <- lm(frog_mort ~ car_num, dat) # linear model 
 (sum_mymod <- summary(mymod)) 
 (r0 <- sum_mymod$coefficients[2]) # extract correlation coefficient 
@@ -312,10 +332,11 @@ for (i in 1:5000){
   r <- summary(lm(mort_each_boot~car_each_boot))$coefficients[2]
   boot_r_all[i] <- r
 }
-
+# step 3. Check the distribution of r 
 hist(boot_r_all,xlim = c(-0.5,0.5))
-abline(v=r0,col="red")
+abline(v=r0,col="red") # our regression coefficient falls outside the bootstrapping range, meaning that our non-zero correlation coefficient is not due to sampling error. 
 ```
+
 
 
 
@@ -642,7 +663,7 @@ To finish this all off lets make some figures that combine these separate plots 
 
 
 ```{r}
-install.packages("patchwork")
+#install.packages("patchwork")
 
 library(patchwork)
 

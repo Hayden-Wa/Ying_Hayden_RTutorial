@@ -41,6 +41,15 @@ We will continue with the following section 4 and 5 today!
 - Section 4: Estimation statistics
 - Section 5: Data visulization 
 
+Recall our <font size="4" color="orange">biological question</font>:
+
+- Has frog mortality changed in current COVID-19 situation in Ontario compared to before the pandemic?
+
+We raised two <font size="4" color="orange">hypotheses</font>: 
+
+- H0: It does not change.
+- H1: Frog mortality rate decreases with decreasing traffic under Ontario lockdown. 
+
 <font size="4" color="blue">R</font>eady?
 
 ![<font size="4" color="gray">*You are my rock! Love from Lougheed Lab. Photo by Ying Chen.*</font>](IMG_6208.JPG)
@@ -59,49 +68,45 @@ We will continue with the following section 4 and 5 today!
 - <font size="2" color="gray">*Rothman, K. J. 1978. A show of confidence. New England Journal of Medicine 299(24): 1362-1363.*</font>
 - <font size="2" color="gray">*Gardner, M. J., and D. G. Altman. 1986. British Medical Journal 292(6522): 746-750.*</font>
 - <font size="2" color="gray">*Coe, R. 2002. It's the effect size, stupid! What effect size is and why it is important. Annual Conference of the British Educational Research Association; University of Exeter, England.*</font>
+- <font size="2" color="gray">*Cumming, G. 2012. Understanding The New Statistics: Effect Sizes, Confidence Intervals, and Meta-Analysis. New York: Routledge.*</font>
 - <font size="2" color="gray">*Sullivan, G. M., and R. Feinn. 2012. Using effect size — or why the p value is not enough. Journal of Graduate Medical Education 4(3): 279-282*</font>
 - <font size="2" color="gray"> *Wasserstein, R. L., A. L. Schirm, and N. A. Lazar. 2019. Moving to a world beyond “p < 0.05”. The American Statistician, 73:1-19.*</font>
 - <font size="2" color="gray"> *Halsey, L. G. 2019. The reign of the p-value is wver: What alternative analyses could we employ to fill the power vacuum? Biology Letters 15: 20190174*</font>
 - <font size="2" color="gray"> *Amrhein, V., S. Greenland, and B. Mcshane. 2019. Retire statistical significance. Nature 567:305-307.*</font>
 
+<p>&nbsp;</p>
+#### 4.1 Alternatives to p-value
 
 Problems of p-value and statistically significance:
 
-- Dichotomy is not informative of the observed data (e.g. size of the difference between the groups), and can be misleading.  
-- 
-
-
-Alternatives:
-
-- Bayesian analysis 
-- 
-
-
-
-Important concepts:
-
-- Standard deviation: an descriptive index. 
-- Standard error: an estimative index. 
+- Not informative of the data. 
+    + P-value is just the likelihood that the null hypothesis is true. 
+- Dichotomy can be misleading. 
+    + There is "no difference" because the p-value is "over 0.05".
+    + One study is "statistically significant" while the other is "not statistically significant". 
+    ![<font size="4" color="gray">*Screenshot from Amrhein et al. 2019.*</font>](IMG306.png){width=800px}
 
 
 
-**Package dabestr** 
+<p>&nbsp;</p>
+**Alternatives (Halsey 2019)**:
 
-- Website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
-- Official release on CRAN: https://cran.r-project.org/web/packages/dabestr/index.html 
-- Github link: https://github.com/ACCLAB/dabestr 
-
-```{r}
+- **Bayes factor**: the ratio of the likelihood of one particular hypothesis to the likelihood of another.
+    + For example, a Bayes factor of 5 indicates that the strength of evidence is five times greater for the alternative hypothesis than the null hypothesis; a Bayes factor of 1/5 indicates the reverse.
+- **Akaike information criterion**: 
+    + Relative test of model quality. Use `AIC()`
+- **Estimation statistics**: Data visualization with effect size + confidence interval 
+    + Effect size: how strong is the effect?
+    + Confidence interval: how accurate is that value as an estimate of how strong the population effect is
+    + The Gardner–Altman plot.
+    + ![<font size="4" color="gray">*Screenshot from Gardner and Altman 1986.*</font>](IMG305.png){width=600px}
+    + The Cumming Plot.
+```{r, echo=FALSE,message=FALSE,warning=FALSE}
 # Estimation stats: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
 # Codes are from https://cran.r-project.org/web/packages/dabestr/vignettes/using-dabestr.html 
 library(dplyr)
-
 set.seed(54321)
-
-N = 10
-N = 40
 N = 100
-
 c1 <- rnorm(N, mean = 100, sd = 25)
 c2 <- rnorm(N, mean = 100, sd = 50)
 g1 <- rnorm(N, mean = 120, sd = 25)
@@ -111,37 +116,215 @@ g4 <- rnorm(N, mean = 100, sd = 50)
 gender <- c(rep('Male', N/2), rep('Female', N/2))
 dummy <- rep("Dummy", N)
 id <- 1: N
-
 wide.data <- 
   tibble::tibble(
     Control1 = c1, Control2 = c2,
     Group1 = g1, Group2 = g2, Group3 = g3, Group4 = g4,
     Dummy = dummy,
     Gender = gender, ID = id)
-
-
 my.data   <- 
   wide.data %>%
   tidyr::gather(key = Group, value = Measurement, -ID, -Gender, -Dummy)
-
-
 library(dabestr)
-
-two.group.unpaired <- 
+multi.two.group.unpaired <- 
   my.data %>%
   dabest(Group, Measurement, 
-         # The idx below passes "Control" as the control group, 
-         # and "Group1" as the test group. The mean difference
-         # will be computed as mean(Group1) - mean(Control1).
-         idx = c("Control1", "Group1"), 
-         paired = FALSE)
-
-two.group.unpaired 
-
-plot(two.group.unpaired, color.column = Gender)
-
+         idx = list(c("Control1", "Group1"), 
+                    c("Control2", "Group2")),
+         paired = FALSE
+         )
+plot(multi.two.group.unpaired, color.column = Gender)
 ```
 
+
+
+<p>&nbsp;</p>
+#### 4.2 Estimation plots
+
+```{r, message=FALSE,warning=FALSE}
+# load two datasets 
+dat <- read.csv("FrogPandemic.csv")
+dat <- dat[-1,]
+dat_10loc <- read.csv("FrogPandemic_10loc.csv")
+```
+
+<p>&nbsp;</p>
+**Example 1. Paired Student's t-test** 
+
+Recall our null hypothesis: the mean frog mortality in Ontario in 2019 and 2020 is the same.
+
+If we do statistical t-test (Remember to check assumptions!! We skip it here...): 
+
+```{r}
+t.test(dat$frog_mort[which(dat$year==2019)],dat$frog_mort[which(dat$year==2020)],paired=TRUE,alternative = "two.sided")
+
+# If you want to change confidence interval, use conf.level 
+t.test(dat$frog_mort[which(dat$year==2019)],dat$frog_mort[which(dat$year==2020)],paired=TRUE,alternative = "two.sided",conf.level=0.90)
+```
+
+Note the confidence interval for the t-test here is calculated by $\bar{x}_{diff} ± t^* \times \frac{s_{diff}}{\sqrt{n}}$. 
+
+```{r}
+(x_diff <- mean(dat$frog_mort[which(dat$year==2019)]-dat$frog_mort[which(dat$year==2020)]))
+(sd_diff <- sd(dat$frog_mort[which(dat$year==2019)]-dat$frog_mort[which(dat$year==2020)]))
+(t_left <- qt(0.025,df=8))
+(t_right <- qt(0.975,df=8))
+(conf_left <- x_diff + t_left*sd_diff/sqrt(9))
+(conf_right <- x_diff + t_right*sd_diff/sqrt(9))
+```
+
+<p>&nbsp;</p>
+If we use estimation plots using R package "dabestr":
+
+- Website: https://www.estimationstats.com/?fbclid=IwAR0d6nqcf3IbNgSb772R3TnzL4Nv7AtQFmLNToBvISmQmEMFyyVF6FdJ-lc#/background 
+- Official release on CRAN: https://cran.r-project.org/web/packages/dabestr/index.html
+- Github link: https://github.com/ACCLAB/dabestr 
+- Tutorial: https://cran.r-project.org/web/packages/dabestr/vignettes/using-dabestr.html 
+
+
+```{r}
+library(dabestr)
+
+# create a column called ID for the paired comparison 
+dat$ID <- NA
+dat$ID[which(dat$location=="Site A" & dat$species=="Rana clamitans")] <- 1
+dat$ID[which(dat$location=="Site A" & dat$species=="Pseudacris crucifer")] <- 2
+dat$ID[which(dat$location=="Site A" & dat$species=="Lithobates pipiens")] <- 3
+dat$ID[which(dat$location=="Site B" & dat$species=="Rana clamitans")] <- 4
+dat$ID[which(dat$location=="Site B" & dat$species=="Pseudacris crucifer")] <- 5
+dat$ID[which(dat$location=="Site B" & dat$species=="Lithobates pipiens")] <- 6
+dat$ID[which(dat$location=="Site C" & dat$species=="Rana clamitans")] <- 7
+dat$ID[which(dat$location=="Site C" & dat$species=="Pseudacris crucifer")] <- 8
+dat$ID[which(dat$location=="Site C" & dat$species=="Lithobates pipiens")] <- 9
+
+two.group.paired <- 
+  dat %>%
+  dabest(year, frog_mort, 
+         idx = c("2019","2020"),
+         paired = TRUE, id.column = ID)
+
+plot(two.group.paired, color.column = species)
+
+two.group.paired
+```
+
+How does this confidence interval calculated? 
+
+**Bootstrapping**
+
+A bootstrap model gets its name from the old 19th century expression to “lift yourself up by your own bootstraps”, as a metaphor for accomplishing a task without external forces. In the context of data analysis, the term bootstrap refers to the generation of ‘new’ data from existing data.
+
+Advantages: 
+
+- Non-parametric statistical analysis. (Nonparametric means the data studied are from a sample or population that deviates from a normal distribution.)
+- Easy construction of the 95% CI from the resampling distribution.
+
+**Note that bootstrapping "may not give very accurate coverage in a small-sample non-parametric situation" (Efron 2000). If you have a small dataset or you have severe outliers, be cautious with the result.**
+
+
+Manual coding: 
+
+```{r}
+# Step 1. calculate difference for each pair of the original data 
+(mor_paired_diff <- dat$frog_mort[which(dat$year==2020)]-dat$frog_mort[which(dat$year==2019)])
+# Step 2. resample the list of paired difference with replacement and calculate the mean difference for 5000 times.
+boot_mean_all <- NA # Store 5000 bootstrap mean
+for (i in 1:5000){
+  diff_each_boot <- sample(mor_paired_diff, 9, replace = T)
+  boot_mean_all[i] <- mean(diff_each_boot)
+}
+# Step 3. get the 95% confidence interval 
+quantile(boot_mean_all, c(.025, .975))
+```
+
+Using R package simpleboot: 
+
+- Offcial release on CRAN: https://cran.r-project.org/web/packages/simpleboot/index.html 
+- github link: https://github.com/rdpeng/simpleboot
+
+```{r}
+library(simpleboot)
+# Step 1. calculate difference for each pair of the original data 
+mor_paired_diff <- dat$frog_mort[which(dat$year==2020)]-dat$frog_mort[which(dat$year==2019)]
+# Step 2. feed the difference to one.boot() function 
+mor_boot1 <- one.boot(mor_paired_diff, FUN = mean, R = 5000)
+# Step 3. get the 95% confidence interval 
+bootci <- boot::boot.ci(mor_boot1, conf = 0.95, type = c("perc", "bca"))
+c(bootci$bca[4], bootci$bca[5]) 
+c(bootci$percent[4],bootci$percent[5])
+quantile(mor_boot1$t, c(.025, .975)) 
+```
+
+Now let's have a look at the estimation plot again!
+
+```{r}
+plot(two.group.paired, color.column = species, rawplot.ylabel = "Frog mortality")
+```
+
+
+<p>&nbsp;</p>
+**Example 2. ANOVA for factors with Ordered Levels** 
+
+```{r, message=FALSE,warning=FALSE}
+shared.control <- 
+  dat %>%
+  dabest(year, frog_mort, 
+         idx = c("2010", "2011", "2012","2013","2014","2015","2016","2017","2018","2019","2020"),
+         paired = FALSE)
+
+plot(shared.control, color.column = species, rawplot.type = "swarmplot")
+
+shared.control
+
+shared.control_10loc <- 
+  dat_10loc %>%
+  dabest(year, frog_mort, 
+         idx = c("2010", "2011", "2012","2013","2014","2015","2016","2017","2018","2019","2020"),
+         paired = FALSE)
+
+plot(shared.control_10loc, color.column = species, rawplot.type = "swarmplot") # Much smaller confidence interval if we have larger sample size 
+
+shared.control_10loc
+```
+
+
+
+
+
+
+<p>&nbsp;</p>
+**Example 3. Confidence interval for regression** 
+
+Unfortunately, no plot is available in dabestr for regression analysis. But we can still bootstrap the regression coeficient. 
+
+Null hypothesis: frog mortality does not correlate with number of cars on the road in Ontario (r=0). 
+
+```{r}
+# step 1. Caculate regression coefficient r 
+mymod <- lm(frog_mort ~ car_num, dat) # linear model 
+(sum_mymod <- summary(mymod)) 
+(r0 <- sum_mymod$coefficients[2]) # extract correlation coefficient 
+# step 2. Boostrap 
+boot_r_all <- NA
+for (i in 1:5000){
+  car_each_boot <- sample(dat$car_num, length(dat$car_num),replace = T)
+  mort_each_boot <- sample(dat$frog_mort, length(dat$frog_mort),replace = T)
+  r <- summary(lm(mort_each_boot~car_each_boot))$coefficients[2]
+  boot_r_all[i] <- r
+}
+
+hist(boot_r_all,xlim = c(-0.5,0.5))
+abline(v=r0,col="red")
+```
+
+
+
+#### 4.3 Other R packages 
+
+**"itns"**
+
+- This R package contains datasets from psychology studies used in book Introduction to the New Statistics by Geoff Cumming and Robert Calin-Jageman, published by Routledge in late 2016. It also contains a function to compute Cohen's d effect size and a confidence interval for paired samples.
+- Github link: https://github.com/gitrman/itns 
 
 
 
